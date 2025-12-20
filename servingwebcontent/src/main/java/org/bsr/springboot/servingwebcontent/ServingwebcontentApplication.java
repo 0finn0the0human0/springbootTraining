@@ -1,7 +1,6 @@
 /******************************************************************************
  * Project: SpringBoot Web Guide Series
  * Description: An application that consumes a RESTful web service
-
  * Author: Benjamin Soto-Roberts
  * Created: 2025-12-18
  * Source: https://spring.io/guides/gs/serving-web-content
