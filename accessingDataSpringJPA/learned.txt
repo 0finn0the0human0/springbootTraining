@@ -1,0 +1,36 @@
+________________________________________________________________________________________________________________________
+                                                CommandLineRunner
+________________________________________________________________________________________________________________________
+What CommandLineRunner actually is
+CommandLineRunner is a Spring Boot hook that lets you run code after the application context has fully started.
+
+It’s not a testing tool. It’s not a replacement for JUnit. It’s not meant for “checking if things work.”
+
+It’s a lifecycle hook.
+________________________________________________________________________________________________________________________
+Why does Spring even have CommandLineRunner?
+    Here are the real-world use cases, each one something you cannot or should not do with JUnit.
+
+Bootstrapping application data
+    Populate a database with initial data when the app starts.
+
+Running one‑time startup tasks
+    Warm caches, precompute values, load configuration from external systems.
+
+Triggering background jobs at startup
+    Kick off a scheduled job, message listener, or async process.
+
+Verifying external dependencies at startup
+    Ping a remote API, check S3 buckets, validate credentials.
+
+Building CLI‑style Spring Boot apps
+    Some Spring Boot apps are command‑line tools, not web servers.
+
+Quick debugging or prototyping
+    When you want to run a snippet of code inside the full Spring context.
+
+________________________________________________________________________________________________________________________
+                                        H2 Default Springboot Configuration
+________________________________________________________________________________________________________________________
+Spring Boot absolutely defaults to an in‑memory H2 database if you include H2 on the classpath and you don’t
+configure any datasource properties.
