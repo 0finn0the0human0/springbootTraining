@@ -1,0 +1,142 @@
+                                            Dependency: Validation
+________________________________________________________________________________________________________________________
+
+
+________________________________________________________________________________________________________________________
+                                            Layered Architecture
+________________________________________________________________________________________________________________________
+Layered Architecture Structure
+Key Principles
+	• DTOs in Presentation Layer - Never expose entities directly to clients
+	• Entities in Persistence Layer - Domain models with JPA annotations
+	• Business Logic in Service Layer - Never in controllers or repositories
+	• Security is Cross-cutting - But configuration lives in security package
+	• Dependencies flow downward - Controller → Service → Repository (never upward)
+1. Presentation Layer (Web/API Layer)
+Purpose: Handles HTTP requests/responses, user input, and data presentation
+Folders:
+	• controller/ - REST controllers, MVC controllers
+	• dto/ or request/ and response/ - Data Transfer Objects for API/form input and output
+	• mapper/ - Converts between DTOs and domain entities
+	• validator/ - Custom validation logic
+	• config/web/ - Web-specific configuration (CORS, interceptors)
+Spring Boot Example Classes:
+	• UserController.java
+	• LoginRequest.java, RegisterRequest.java
+	• UserResponse.java
+	• UserDtoMapper.java
+
+2. Service Layer (Business Logic Layer)
+Purpose: Contains core business logic, orchestrates operations, enforces business rules
+Folders:
+	• service/ - Business logic interfaces and implementations
+	• exception/ - Custom business exceptions
+Spring Boot Example Classes:
+	• UserService.java, UserServiceImpl.java
+	• AuthenticationService.java
+	• OrderProcessingService.java
+	• UserNotFoundException.java
+
+3. Persistence Layer (Data Access Layer)
+Purpose: Handles database operations and data persistence
+Folders:
+	• repository/ - Spring Data JPA repositories
+	• entity/ or model/ or domain/ - JPA entities (domain models)
+	• specification/ - JPA Specifications for complex queries (optional)
+Spring Boot Example Classes:
+	• UserRepository.java (extends JpaRepository)
+	• User.java (JPA entity with @Entity)
+	• Role.java, Order.java
+
+4. Security Layer (Cross-cutting, but often separate)
+Purpose: Authentication, authorization, and security configuration
+Folders:
+	• security/ or config/security/ - Security configuration
+	• security/jwt/ - JWT utilities
+	• security/filter/ - Custom filters
+Spring Security Example Classes:
+	• SecurityConfig.java (WebSecurityConfigurerAdapter)
+	• JwtTokenProvider.java
+	• JwtAuthenticationFilter.java
+	• CustomUserDetailsService.java
+
+5. Infrastructure/Configuration Layer (Cross-cutting)
+Purpose: Application configuration, external integrations, utilities
+Folders:
+	• config/ - Application configuration classes
+	• util/ or helper/ - Utility classes
+	• client/ - External API clients
+	• messaging/ - Message queue handlers
+Spring Boot Example Classes:
+	• DatabaseConfig.java
+	• RedisConfig.java
+	• DateUtil.java
+	• EmailClient.java
+
+Practical Spring Boot/Spring Security Example
+src/main/java/com/example/ecommerce/
+│
+├── presentation/
+│   ├── controller/
+│   │   ├── AuthController.java
+│   │   ├── UserController.java
+│   │   └── OrderController.java
+│   ├── dto/
+│   │   ├── request/
+│   │   │   ├── LoginRequest.java
+│   │   │   ├── RegisterRequest.java
+│   │   │   └── CreateOrderRequest.java
+│   │   └── response/
+│   │       ├── AuthResponse.java
+│   │       ├── UserResponse.java
+│   │       └── OrderResponse.java
+│   └── mapper/
+│       ├── UserMapper.java
+│       └── OrderMapper.java
+│
+├── service/
+│   ├── AuthenticationService.java
+│   ├── UserService.java
+│   ├── UserServiceImpl.java
+│   ├── OrderService.java
+│   └── exception/
+│       ├── UserNotFoundException.java
+│       ├── InvalidCredentialsException.java
+│       └── InsufficientStockException.java
+│
+├── repository/
+│   ├── UserRepository.java
+│   ├── RoleRepository.java
+│   └── OrderRepository.java
+│
+├── entity/
+│   ├── User.java
+│   ├── Role.java
+│   ├── Order.java
+│   └── OrderItem.java
+│
+├── security/
+│   ├── SecurityConfig.java
+│   ├── CustomUserDetailsService.java
+│   ├── jwt/
+│   │   ├── JwtTokenProvider.java
+│   │   └── JwtAuthenticationFilter.java
+│   └── AuthenticationEntryPoint.java
+│
+└── config/
+    ├── DatabaseConfig.java
+    └── CorsConfig.java
+
+Data Flow Example: User Registration
+	1. Presentation Layer: AuthController receives RegisterRequest DTO
+	2. Presentation Layer: UserMapper converts DTO → User entity
+	3. Service Layer: UserService.registerUser() validates business rules (email unique, password strength)
+	4. Service Layer: Encodes password, assigns default role
+	5. Persistence Layer: UserRepository.save() persists to database
+	6. Service Layer: Returns User entity
+	7. Presentation Layer: UserMapper converts User → UserResponse DTO
+	8. Presentation Layer: AuthController returns HTTP 201 with UserResponse
+
+________________________________________________________________________________________________________________________
+
+
