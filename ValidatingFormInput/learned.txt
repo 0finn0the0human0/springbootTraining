@@ -1,24 +1,54 @@
                                             Dependency: Validation
 ________________________________________________________________________________________________________________________
-                                            Objects Discovered
+The spring-boot-starter-validation is a starter dependency that simplifies input validation in Spring Boot applications 
+by automatically bringing in the necessary libraries, primarily the Hibernate Validator (the reference implementation of 
+the Jakarta Bean Validation specification).
+
+https://docs.spring.io/spring-framework/docs/4.1.x/spring-framework-reference/html/validation.html#validation-beanvalidation
 ________________________________________________________________________________________________________________________
-WebMvcConfigurer -
+                                            Classes/Interfaces Discovered
+________________________________________________________________________________________________________________________
+WebMvcConfigurer - Defines callback methods to customize the Java-based configuration for Spring MVC enabled via 
+	@EnableWebMvc. (interface)
 
-ViewControllerRegistry -
+ViewControllerRegistry - Assists with the registration of simple automated controllers pre-configured with status code 
+	and/or a view. 
 
-BindingResult -
+BindingResult - General interface that represents binding results. Extends the Errors interface for error registration 
+	capabilities, allowing for a Validator to be applied, and adds binding-specific analysis and model building.
+	Serves as result holder for a DataBinder, obtained via the DataBinder.getBindingResult() method. BindingResult 
+	implementations can also be used directly, for example to invoke a Validator on it (for example, as part of a unit 
+	test). (interface)
 
+https://docs.spring.io/spring-framework/docs/current/javadoc-api/index.html
 ________________________________________________________________________________________________________________________
                                             Annotations Discovered
 ________________________________________________________________________________________________________________________
-@Valid -
+@Valid - The @Valid annotation is part of the standard JSR-303 Bean Validation API, and is not a Spring-specific construct.
+	Spring MVC will validate a @Valid object after binding so-long as an appropriate Validator has been configured.
 
-@ModelAttribute
+	See reference for spring-boot-starter-validation in -> Dependency: Validation
 
+
+@ModelAttribute - Annotation that binds a method parameter or method return value to a named model attribute, exposed to a 
+	web view. Supported for controller classes with @RequestMapping methods.
+
+	WARNING: Data binding can lead to security issues by exposing parts of the object graph that are not meant to be accessed
+	or modified by external clients. Therefore the design and use of data binding should be considered carefully with regard 
+	to security. For more details, please refer to the dedicated sections on data binding for Spring Web MVC and Spring 
+	WebFlux in the reference manual.
+
+
+@EnableWebMvc-annotated configuration classes may implement this interface to be called back and given a chance to 
+	customize the default configuration. 
+
+https://docs.spring.io/spring-framework/docs/current/javadoc-api/index.html
 ________________________________________________________________________________________________________________________
                                             Technical Roadblocks
 ________________________________________________________________________________________________________________________
-- Unresolved Thymeleaf references in form.html
+Unresolved Thymeleaf references in form.html:
+To resolve, @ModelAttribute needed to be added to each object reference to ensure that the object being referenced in the
+	html is added to the spring model object in the controller method.
 ________________________________________________________________________________________________________________________
                                             Layered Architecture
 ________________________________________________________________________________________________________________________
