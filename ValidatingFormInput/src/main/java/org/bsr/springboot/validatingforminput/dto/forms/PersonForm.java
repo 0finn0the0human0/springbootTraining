@@ -14,10 +14,12 @@ import jakarta.validation.constraints.Size;
 
 public class PersonForm {
 
+    // Annotations from jakarta that set the validation constraints
     @NotNull
     @Size(min=2, max=30)
     private String name;
 
+    // Annotations from jakarta that set the validation constraints
     @NotNull
     @Min(18)
     private Integer age;
