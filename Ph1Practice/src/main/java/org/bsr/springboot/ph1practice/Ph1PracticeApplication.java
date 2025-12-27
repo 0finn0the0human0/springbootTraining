@@ -1,3 +1,10 @@
+/***********************************************************************************************************************
+ * Project: Phase 1: Core Spring Boot Foundations
+ * Description: A practice CRUD application with REST endpoints and database integration.
+ * Author: Benjamin Soto-Roberts
+ * Created: 12/25/2025
+ ***************************************************************/
+
 package org.bsr.springboot.ph1practice;
 
 import org.springframework.boot.SpringApplication;
