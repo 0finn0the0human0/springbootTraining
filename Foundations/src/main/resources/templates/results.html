@@ -6,23 +6,32 @@
 </head>
 <body>
 <h1>Search Results</h1>
+
+<!--Sets a divider that shows if the list is empty. Contents of the divider is a paragraph message to user-->
 <div th:if="${#lists.isEmpty(products)}">
     <p>No products found.</p>
 </div>
-<div th:unless="${#lists.isEmpty(products)}">
-    <table>
-        <tr>
-            <th>Name</th>
+<!--Sets the divider that shows the list of products in a table if products is not empty-->
+<div th:unless="${#lists.isEmpty(products)}"> <!--Unless is a condition that enforces divider to not render if empty-->
+    <table> <!--Sets the table-->
+        
+        <tr> <!--Table Row 1-->
+            <th>Name</th> <!--Table Headers-->
             <th>Description</th>
             <th>Price</th>
         </tr>
-        <tr th:each="product : ${products}">
-            <td th:text="${product.productName}"></td>
-            <td th:text="${product.productDesc}"></td>
-            <td th:text="${product.retailPrice}"></td>
+        
+        <tr th:each="product : ${products}"> <!--Table Row 2, for each product in products...-->
+            <td th:text="${product.productName}"></td> <!--Table Data, returns product name from method call-->
+            <td th:text="${product.productDesc}"></td> <!--Table Data, returns product description from method call-->
+            <td th:text="${product.retailPrice}"></td> <!--Table Data, returns retail price from method call-->
         </tr>
+        
     </table>
 </div>
+
+<!--Anchor hyperlink back to form search page-->
 <a th:href="@{/}">Search Again</a>
+
 </body>
 </html>
