@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Search Results</h1>
+<div th:if="${#lists.isEmpty(products)}">
+    <p>No products found.</p>
+</div>
+<div th:unless="${#lists.isEmpty(products)}">
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+        </tr>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.productName}"></td>
+            <td th:text="${product.productDesc}"></td>
+            <td th:text="${product.retailPrice}"></td>
+        </tr>
+    </table>
+</div>
+<a th:href="@{/}">Search Again</a>
+</body>
+</html>

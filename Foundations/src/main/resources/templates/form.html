@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Search Products</h1>
+<form action="#" th:action="@{/}" th:object="${productNameQuery}" method="post">
+    <label for="productName">Product Name:</label>
+    <input type="text" th:field="*{productName}" id="productName"/>
+    <span th:if="${#fields.hasErrors('productName')}" th:errors="*{productName}"></span>
+    <button type="submit">Search</button>
+</form>
+
+</body>
+</html>
