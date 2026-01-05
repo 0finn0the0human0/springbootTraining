@@ -2,14 +2,27 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Search Products</title>
 </head>
 <body>
 <h1>Search Products</h1>
+<!-- Plain HTML action="#" is just a placeholder; it will be replaced by th:action="@{/}" which @{} is a link (URL)
+expression. Here it builds the URL '/' respecting the app context path. Sets the "selection target" for *{} expressions
+(typically a form-backing bean) to the object productNameQuery which is a reference to a dto. -->
 <form action="#" th:action="@{/}" th:object="${productNameQuery}" method="post">
+
+    <!--Sets the label that binds to the clients input request from the form-->
     <label for="productName">Product Name:</label>
+
+    <!-- th:field binds this input to the property 'productName' of the th:object -->
+    <!-- *{} is a "selection" expression: resolved relative to th:object -->
     <input type="text" th:field="*{productName}" id="productName"/>
-    <span th:if="${#fields.hasErrors('productName')}" th:errors="*{productName}"></span>
+
+
+    <!-- th:if conditionally renders this span only when there are field errors. ${} is a variable expression (evaluated
+    against the model). #fields is a Spring MVC utility object to work with binding/validation -->
+    <span th:if="${#fields.hasErrors('productName')}" 
+        th:errors="*{productName}"></span> <!-- Renders validation error messages for this field -->
     <button type="submit">Search</button>
 </form>
 
