@@ -89,4 +89,96 @@ Outcome: A working app exposing REST APIs and a basic Thymeleaf UI for querying 
 -	H2 in-memory or file-based database for development/demo
 
 
+**TR-2 Database**
+- Product table with columns:
+        - id BIGINT (PK, auto-increment)
+        - name VARCHAR(100) UNIQUE NOT NULL
+        - description VARCHAR(1000) NULL
+        - price DECIMAL(12,2) NOT NULL
+- Use Hibernate DDL auto for schema generation (create-drop or update) for demo.
 
+
+**TR-3 Persistence Layer**
+-	ProductRepository extends JpaRepository<Product, Long>.
+-	Entity annotated with @Entity/@Table. BigDecimal for price with @Column(precision=12, scale=2).
+
+
+**TR-4 Controllers**
+-	ProductRestController under /api/products produces/consumes application/json.
+-	ProductWebController under / returns view names; uses Model for data.
+
+
+**TR-5 Error Handling**
+-	REST: Return 400 with validation messages on invalid input; 404 when entity not found.
+-	Web: Re-render form with BindingResult errors.
+
+
+**TR-6 Testing**
+-	Unit tests for service.
+-	Slice tests for controllers (@WebMvcTest) and repository (@DataJpaTest).
+-	Basic integration test using @SpringBootTest with H2.
+
+
+## Non-Functional Requirements (Phase 1)
+**NFR-1 Usability**
+-	Simple HTML forms and lists with Thymeleaf; no styling requirements.
+
+**NFR-2 Performance**
+-	Suitable for small datasets; H2 suffices.
+  
+**NFR-3 Reliability**
+-	Basic happy-path tests; restart-safe if using file-based H2.
+
+**NFR-4 Maintainability**
+-	Clear layering (Controller -> Service -> Repository), DTOs separate from entities.
+
+
+## Assumptions and Constraints
+-	Single developer; local development environment only.
+-	No external systems or third-party APIs required.
+-	No authentication in Phase 1; /admin paths are open during demo.
+-	Build tool: Maven
+
+## Acceptance Criteria
+**AC-1 Create Product**
+-	Creating a product via POST /api/products returns 201 and a JSON body with id, name, description, price.
+  
+**AC-2 Get Product by id**
+-	Retrieving a product by id returns 200 with correct data; non-existent id returns 404.
+  
+**AC-3 Update Product**
+-	Updating a product via PUT persists changes, including price scale normalization to two decimals.
+
+**AC-4 Delete Product**
+-	Deleting a product returns 204 and the record no longer appears in listings.
+
+**AC-5 Web (Thymeleaf) UI**
+-	Thymeleaf list page displays seeded products; edit page updates description and redirects back to list showing the change.
+
+**AC-6 Validation errors**
+-	Blank name → reported as error in both REST (400 with field messages) and UI (form error).
+-	Negative price → rejected with appropriate message.
+
+## Milestones
+**M-1 Project skeleton**
+-	dependencies, basic app runs with H2.
+
+**M-2 Domain + repository**
+-	Product entity, JpaRepository, schema generation.
+
+**M-3 DTOs**
+-	DTOs + service layer implemented.
+
+**M-4 REST**
+-	controller endpoints complete with validation and error handling.
+
+**M-5 Thymeleaf**
+-	pages and MVC controller for list/edit description.
+
+**M-6 Data**
+-	seeding via CommandLineRunner and smoke tests.
+
+**M-7 Tests**
+-	(unit + basic integration) and documentation.
+
+    
