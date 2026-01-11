@@ -48,4 +48,16 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * The method selects all rows from the db and maps the products to response dtos.Used for RESTapi calls for all
+     * products.
+     * */
+    public List<ProductResponseDTO> getAllProducts() {
+        List<Product> products = repository.findAll();
+
+        return products.stream()
+                .map(mapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
 }
