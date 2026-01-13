@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,8 +37,8 @@ public class ProductRestController {
     }
 
     /**
-     * The method returns all available products as a ResponseEntity containing a list of ProductResponseDTO objects and
-     * an HTTP 200 OK status.
+     * The method returns all available products as a ResponseEntity containing a list of ProductResponseDTO objects
+     * and an HTTP 200 OK status.
      * */
     @GetMapping
     public ResponseEntity<List<ProductResponseDTO>> getProducts() {
@@ -45,6 +46,16 @@ public class ProductRestController {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
+    /**
+     * The method returns an available product by its id.  If the product exists, a 200 OK response with the mapped
+     * ProductResponseDTO is returned. If not found, a 404 Not Found response is returned.
+     * */
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponseDTO> getProduct(@PathVariable Long id) {
+        LOGGER.warn("Product id {} was called from REST", id);
+        return productService.getProductById(id).map(ResponseEntity::ok).orElseGet(() ->
+                ResponseEntity.notFound().build());
+    }
 
 
 }

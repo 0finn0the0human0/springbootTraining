@@ -14,8 +14,10 @@ import org.bsr.springboot.foundations.presentation.dto.ProductRequestDTO;
 import org.bsr.springboot.foundations.presentation.dto.ProductResponseDTO;
 import org.bsr.springboot.foundations.presentation.mapper.ProductMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +40,7 @@ public class ProductService {
      * the clients search term was found in any of the product names then maps the list of products to response
      * dtos to display back to the client.
      * */
+    @Transactional(readOnly = true)
     public List<ProductResponseDTO> getProductsContaining(ProductRequestDTO productRequest) {
         String searchTerm = productRequest.productName().trim();
 
@@ -49,15 +52,25 @@ public class ProductService {
     }
 
     /**
-     * The method selects all rows from the db and maps the products to response dtos.Used for RESTapi calls for all
-     * products.
+     * The method selects all rows from the db and maps the products to response dtos.
+     * Used for RESTapi calls to return all products.
      * */
+    @Transactional(readOnly = true)
     public List<ProductResponseDTO> getAllProducts() {
         List<Product> products = repository.findAll();
 
         return products.stream()
                 .map(mapper::toResponseDto)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * The method selects a product by its id. Returns an optional in case the request is not found.
+     * Used for api calls.
+     * */
+    @Transactional(readOnly = true)
+    public Optional<ProductResponseDTO> getProductById(Long id) {
+        return repository.findById(id).map(mapper::toResponseDto);
     }
 
 }
