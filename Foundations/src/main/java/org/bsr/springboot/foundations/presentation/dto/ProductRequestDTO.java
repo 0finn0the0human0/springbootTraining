@@ -17,9 +17,9 @@ import jakarta.validation.constraints.Size;
 
 public record ProductRequestDTO (
 
-    @NotBlank(message = "Enter search text.")
-    @Size(min = 2, max = 255, message = "Invalid character length, Please try again.")
-    @Pattern(regexp = "^[a-zA-Z0-9\\s-]+$", message = "An invalid character was entered, Please try again.")
+    @NotBlank(message = "Product Name is required.")
+    @Size(min = 2, max = 255, message = "Character length 2-100.")
+    @Pattern(regexp = "^[a-zA-Z0-9\\s-]+$", message = "No special characters allowed.")
     String productName
 
 )
