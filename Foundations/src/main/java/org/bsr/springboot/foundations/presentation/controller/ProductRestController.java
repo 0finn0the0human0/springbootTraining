@@ -9,15 +9,14 @@
 package org.bsr.springboot.foundations.presentation.controller;
 
 import org.bsr.springboot.foundations.presentation.dto.ProductResponseDTO;
+import org.bsr.springboot.foundations.presentation.dto.ProductRestRequestDTO;
 import org.bsr.springboot.foundations.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -47,7 +46,7 @@ public class ProductRestController {
     }
 
     /**
-     * The method returns an available product by its id.  If the product exists, a 200 OK response with the mapped
+     * The method returns an available product by its id. If the product exists, a 200 OK response with the mapped
      * ProductResponseDTO is returned. If not found, a 404 Not Found response is returned.
      * */
     @GetMapping("/{id}")
@@ -55,6 +54,15 @@ public class ProductRestController {
         LOGGER.warn("Product id {} was called from REST", id);
         return productService.getProductById(id).map(ResponseEntity::ok).orElseGet(() ->
                 ResponseEntity.notFound().build());
+    }
+
+    /** The method creates a new product and returns 201 Created with a Location header. */
+    @PostMapping
+    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody ProductRestRequestDTO requestDTO) {
+        ProductResponseDTO createdProduct = productService.createProductFromRequest(requestDTO);
+
+        // Returns 201 created and the uri of the resource
+        return ResponseEntity.created(URI.create("/api/products/" + createdProduct.id())).body(createdProduct);
     }
 
 
