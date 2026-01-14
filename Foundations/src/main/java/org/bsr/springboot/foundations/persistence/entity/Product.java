@@ -47,6 +47,12 @@ public class Product {
         this.vendorPrice = vendorPrice;
     }
 
+    public Product(String productName, String productDesc, BigDecimal retailPrice) {
+        this.productName = productName;
+        this.productDesc = productDesc;
+        this.retailPrice = retailPrice;
+    }
+
     public Long getId() {
         return id;
     }

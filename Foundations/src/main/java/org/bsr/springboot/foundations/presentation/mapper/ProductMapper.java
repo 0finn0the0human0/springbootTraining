@@ -13,6 +13,7 @@ package org.bsr.springboot.foundations.presentation.mapper;
 
 import org.bsr.springboot.foundations.persistence.entity.Product;
 import org.bsr.springboot.foundations.presentation.dto.ProductResponseDTO;
+import org.bsr.springboot.foundations.presentation.dto.ProductRestRequestDTO;
 import org.springframework.stereotype.Component;
 
 
