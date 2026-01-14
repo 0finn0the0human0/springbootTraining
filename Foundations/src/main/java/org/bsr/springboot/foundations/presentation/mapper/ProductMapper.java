@@ -39,4 +39,13 @@ public class ProductMapper {
     }
 
 
+    /**
+     * This method takes a DTO request from the ProductRestController and maps it to a product entity.
+     * */
+    public Product toProduct(ProductRestRequestDTO requestDTO) {
+        return new Product(requestDTO.productName(),
+                requestDTO.productDesc(),
+                requestDTO.retailPrice());
+    }
+
 }

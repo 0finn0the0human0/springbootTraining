@@ -16,6 +16,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Entity
 public class Product {
@@ -43,14 +44,22 @@ public class Product {
     public Product(String productName, String productDesc, BigDecimal retailPrice, BigDecimal vendorPrice) {
         this.productName = productName;
         this.productDesc = productDesc;
-        this.retailPrice = retailPrice;
-        this.vendorPrice = vendorPrice;
+        this.retailPrice = normalizePrice(retailPrice);
+        this.vendorPrice = normalizePrice(vendorPrice);
     }
 
     public Product(String productName, String productDesc, BigDecimal retailPrice) {
         this.productName = productName;
         this.productDesc = productDesc;
-        this.retailPrice = retailPrice;
+        this.retailPrice = normalizePrice(retailPrice);
+    }
+
+    /**
+     * Helper method to prevent floating‑point style precision errors and enforce a predictable rounding rule that
+     * ensures consistent format and safe rounding.
+     * */
+    private BigDecimal normalizePrice(BigDecimal price) {
+        return price.setScale(2, RoundingMode.HALF_UP);
     }
 
     public Long getId() {
@@ -78,7 +87,7 @@ public class Product {
     }
 
     public void setRetailPrice(BigDecimal retailPrice) {
-        this.retailPrice = retailPrice;
+        this.retailPrice = normalizePrice(retailPrice);
     }
 
     public BigDecimal getVendorPrice() {
@@ -86,6 +95,6 @@ public class Product {
     }
 
     public void setVendorPrice(BigDecimal vendorPrice) {
-        this.vendorPrice = vendorPrice;
+        this.vendorPrice = normalizePrice(vendorPrice);
     }
 }
