@@ -65,5 +65,15 @@ public class ProductRestController {
         return ResponseEntity.created(URI.create("/api/products/" + createdProduct.id())).body(createdProduct);
     }
 
+    /**
+     * The method takes an id from a delete request and does a boolean check to return false if not exists or delete
+     * and return true. A ternary operation returns 204 for a successful DELETE when there’s nothing to return in the
+     * body and 404 when the resource was not found.
+     * */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        boolean deleted = productService.deleteProductFromRequest(id);
 
+        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
 }

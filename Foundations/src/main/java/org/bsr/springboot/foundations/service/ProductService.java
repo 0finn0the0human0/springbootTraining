@@ -104,4 +104,17 @@ public class ProductService {
         return retailPrice != null && retailPrice.compareTo(STNDRD_RETAIL_MARKUP) >= 0;
     }
 
+    /**
+     * The method checks if a product exists and returns false if it does not exist otherwise deletes the product and
+     * returns true;
+     * */
+    @Transactional
+    public boolean deleteProductFromRequest(Long id) {
+        if (!repository.existsById(id)) {
+            return false;
+        }
+        repository.deleteById(id);
+        return true;
+    }
+
 }
