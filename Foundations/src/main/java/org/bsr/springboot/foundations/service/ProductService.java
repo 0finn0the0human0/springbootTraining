@@ -77,13 +77,13 @@ public class ProductService {
     }
 
     /**
-     * Validates the retail price, constructs a Product entity, applies the standard markup rule to compute vendor
-     * price, saves the entity, and returns a response DTO.
+     * The method validates the retail price, constructs a Product entity, applies the standard markup rule to compute
+     * vendor price, saves the entity, and returns a response DTO.
      * */
     @Transactional
     public ProductResponseDTO createProductFromRequest(ProductRestRequestDTO requestDTO) {
         // Throws exception if retail price rule returns false
-        if (!isValidRetailPrice(requestDTO.retailPrice())) {
+        if (!validRetailPrice(requestDTO.retailPrice())) {
             throw new IllegalArgumentException("Retail Price cannot be less than 10 dollars.");
         }
         Product product = mapper.toProduct(requestDTO);
@@ -95,18 +95,31 @@ public class ProductService {
     }
 
     /**
-     * Helper method to check if the retail price input is at the minimum threshold. For convenience of the demo, the
-     * vendor price is derived from the input retailPrice minus a standard retail markup value. This ensures that the
-     * vendor price is never in the negative. Returns false if the retailPrice is null or less than the standard
-     * retail markup.
+     * The method checks for an existing product using the id and then maps the fields in the requestDTO over the
+     * existing product. Performs standard operations to check price rules and returns a requestDTO. Returns optional in
+     * case product is not found.
      * */
-    private boolean isValidRetailPrice(BigDecimal retailPrice) {
-        return retailPrice != null && retailPrice.compareTo(STNDRD_RETAIL_MARKUP) >= 0;
+    @Transactional
+    public Optional<ProductResponseDTO> updateProduct(Long id, ProductRestRequestDTO requestDTO) {
+        return repository.findById(id).map(existing -> {
+            existing.setProductName(requestDTO.productName());
+            existing.setProductDesc(requestDTO.productDesc());
+
+            BigDecimal newRetail = requestDTO.retailPrice();
+            if (!validRetailPrice(newRetail)) {
+                throw new IllegalArgumentException("New Retail price must be at least $10.00.");
+            }
+            existing.setRetailPrice(newRetail);
+            existing.setVendorPrice(requestDTO.retailPrice().subtract(STNDRD_RETAIL_MARKUP));
+
+            Product saved = repository.save(existing);
+            return mapper.toResponseDto(saved);
+        });
     }
 
     /**
      * The method checks if a product exists and returns false if it does not exist otherwise deletes the product and
-     * returns true;
+     * returns true.
      * */
     @Transactional
     public boolean deleteProductFromRequest(Long id) {
@@ -115,6 +128,16 @@ public class ProductService {
         }
         repository.deleteById(id);
         return true;
+    }
+
+    /**
+     * Helper method to check if the retail price input is at the minimum threshold. For convenience of the demo, the
+     * vendor price is derived from the input retailPrice minus a standard retail markup value. This ensures that the
+     * vendor price is never in the negative. Returns false if the retailPrice is null or less than the standard
+     * retail markup.
+     * */
+    private boolean validRetailPrice(BigDecimal retailPrice) {
+        return retailPrice != null && retailPrice.compareTo(STNDRD_RETAIL_MARKUP) >= 0;
     }
 
 }

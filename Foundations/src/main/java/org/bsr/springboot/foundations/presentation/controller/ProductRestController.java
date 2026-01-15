@@ -76,4 +76,16 @@ public class ProductRestController {
 
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
+
+    /**
+     * The method updates an existing product. Takes the Id of the product from the url path and a requestDTO containing
+     * the updated product data. Returns  200 ok with the updated product if found or a 404 not found if the id doesnt
+     * exist.
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long id,
+                                                            @RequestBody ProductRestRequestDTO requestDTO) {
+        return productService.updateProduct(id, requestDTO).map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }
