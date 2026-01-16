@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 
 public record ProductRestRequestDTO(
 
-        @NotNull(message = "Product Name is required.")
+        @NotBlank(message = "Product Name is required.")
         @Size(min = 2, max = 100, message = "Character length 2-100.")
         @Pattern(regexp = "^[a-zA-Z0-9\\s-]+$", message ="No special characters allowed.")
         String productName,

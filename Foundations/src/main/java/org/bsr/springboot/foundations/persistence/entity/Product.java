@@ -32,11 +32,9 @@ public class Product {
     private String productDesc;
 
     @Column(precision = 7, scale = 2, nullable = false)
-    @DecimalMin("0.00")
     private BigDecimal retailPrice;
 
     @Column(precision = 7, scale = 2, nullable = false)
-    @DecimalMin("0.00")
     private BigDecimal vendorPrice;
 
     public Product() {}

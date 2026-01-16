@@ -8,6 +8,7 @@
 
 package org.bsr.springboot.foundations.presentation.controller;
 
+import jakarta.validation.Valid;
 import org.bsr.springboot.foundations.presentation.dto.ProductResponseDTO;
 import org.bsr.springboot.foundations.presentation.dto.ProductRestRequestDTO;
 import org.bsr.springboot.foundations.service.ProductService;
@@ -58,7 +59,7 @@ public class ProductRestController {
 
     /** The method creates a new product and returns 201 Created with a Location header. */
     @PostMapping
-    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody ProductRestRequestDTO requestDTO) {
+    public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductRestRequestDTO requestDTO) {
         ProductResponseDTO createdProduct = productService.createProductFromRequest(requestDTO);
 
         // Returns 201 created and the uri of the resource
@@ -84,7 +85,7 @@ public class ProductRestController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long id,
-                                                            @RequestBody ProductRestRequestDTO requestDTO) {
+                                                           @Valid @RequestBody ProductRestRequestDTO requestDTO) {
         return productService.updateProduct(id, requestDTO).map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
