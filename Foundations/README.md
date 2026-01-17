@@ -92,9 +92,9 @@ Outcome: A working app exposing REST APIs and a basic Thymeleaf UI for querying 
 **TR-2 Database**
 - Product table with columns:
         - id BIGINT (PK, auto-increment)
-        - name VARCHAR(100) UNIQUE NOT NULL
+        - name VARCHAR(255) UNIQUE NOT NULL
         - description VARCHAR(1000) NULL
-        - price DECIMAL(12,2) NOT NULL
+        - price DECIMAL(7,2) NOT NULL
 - Use Hibernate DDL auto for schema generation (create-drop or update) for demo.
 
 
