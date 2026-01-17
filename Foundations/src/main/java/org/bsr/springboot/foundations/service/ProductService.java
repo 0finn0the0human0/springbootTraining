@@ -83,7 +83,7 @@ public class ProductService {
     @Transactional
     public ProductResponseDTO createProductFromRequest(ProductRestRequestDTO requestDTO) {
         // Throws exception if retail price rule returns false
-        if (!validRetailPrice(requestDTO.retailPrice())) {
+        if (!retailPriceValid(requestDTO.retailPrice())) {
             throw new IllegalArgumentException("Retail Price cannot be less than 10 dollars.");
         }
         Product product = mapper.toProduct(requestDTO);
@@ -106,7 +106,7 @@ public class ProductService {
             existing.setProductDesc(requestDTO.productDesc());
 
             BigDecimal newRetail = requestDTO.retailPrice();
-            if (!validRetailPrice(newRetail)) {
+            if (!retailPriceValid(newRetail)) {
                 throw new IllegalArgumentException("New Retail price must be at least $10.00.");
             }
             existing.setRetailPrice(newRetail);
@@ -136,7 +136,7 @@ public class ProductService {
      * vendor price is never in the negative. Returns false if the retailPrice is null or less than the standard
      * retail markup.
      * */
-    private boolean validRetailPrice(BigDecimal retailPrice) {
+    private boolean retailPriceValid(BigDecimal retailPrice) {
         return retailPrice != null && retailPrice.compareTo(STNDRD_RETAIL_MARKUP) >= 0;
     }
 
