@@ -95,4 +95,9 @@ public class Product {
     public void setVendorPrice(BigDecimal vendorPrice) {
         this.vendorPrice = normalizePrice(vendorPrice);
     }
+
+    @Override
+    public String toString() {
+        return "[id:" + this.id + ", productName:" + this.productName + ", productDesc:" + this.productDesc + "]";
+    }
 }

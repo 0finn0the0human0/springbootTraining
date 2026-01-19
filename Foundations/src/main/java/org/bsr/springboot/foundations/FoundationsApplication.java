@@ -10,6 +10,8 @@ package org.bsr.springboot.foundations;
 
 import org.bsr.springboot.foundations.persistence.entity.Product;
 import org.bsr.springboot.foundations.persistence.repository.ProductRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,6 +22,8 @@ import java.math.BigDecimal;
 
 @SpringBootApplication
 public class FoundationsApplication {
+
+    Logger LOGGER = LoggerFactory.getLogger(FoundationsApplication.class);
 
     public static void main(String[] args) {
         SpringApplication.run(FoundationsApplication.class, args);
@@ -34,6 +38,7 @@ public class FoundationsApplication {
     @Bean
     public CommandLineRunner demo(ProductRepository repository) {
         return args -> {
+            LOGGER.info("========Seeding the database...========");
 
             repository.save(new Product("Adventure Time DVD", "The Best DVD in stores!",
                     new BigDecimal("19.99"), new BigDecimal("9.99")));
@@ -44,6 +49,7 @@ public class FoundationsApplication {
             repository.save(new Product("Jack Stauber CD", "The 2nd Best CD in stores!",
                     new BigDecimal("17.99"), new BigDecimal("7.99")));
 
+            repository.findAll().forEach(product -> LOGGER.info("Product CREATED: {}", product));
         };
     }
 }
