@@ -1,3 +1,12 @@
+/***********************************************************************************************************************
+ * Project: Core Spring Boot Foundations - Phase 1
+ * Description: The ProductRestControllerTest class uses @WebMvcTest to perform slice tests for the
+ *              ProductRestController. Performs acceptance testing for AC-1 Create Product, AC-2 Get Product by id,
+ *              AC-3 Update Product and AC-4 Delete Product as defined in Project 1 SRS.
+ * Author: Benjamin Soto-Roberts
+ * Created: 01/19/26
+ * */
+
 package org.bsr.springboot.foundations.presentation.api;
 
 import org.bsr.springboot.foundations.presentation.controller.ProductRestController;
@@ -5,8 +14,9 @@ import org.bsr.springboot.foundations.presentation.dto.ProductResponseDTO;
 import org.bsr.springboot.foundations.service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;  // ← CHANGED PACKAGE
-import org.springframework.test.context.bean.override.mockito.MockitoBean;  // ← CHANGED PACKAGE
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
@@ -17,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+@ActiveProfiles("test")
 @WebMvcTest(ProductRestController.class)
 class ProductRestControllerTest {
 

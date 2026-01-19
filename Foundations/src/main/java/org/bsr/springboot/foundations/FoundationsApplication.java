@@ -16,6 +16,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 
 import java.math.BigDecimal;
 
@@ -35,21 +36,23 @@ public class FoundationsApplication {
      * The method uses the CommandLineRunner to seed the database after the application context runs. Uses the
      * ProductRepository to save products to the BD
      * */
-//    @Bean
-//    public CommandLineRunner demo(ProductRepository repository) {
-//        return args -> {
-//            LOGGER.info("========Seeding the database...========");
-//
-//            repository.save(new Product("Adventure Time DVD", "The Best DVD in stores!",
-//                    new BigDecimal("19.99"), new BigDecimal("9.99")));
-//            repository.save(new Product("Steven Universe DVD", "The 2nd Best DVD in stores!",
-//                    new BigDecimal("17.99"), new BigDecimal("7.99")));
-//            repository.save(new Product("Meshuggah CD", "The Best CD in stores!",
-//                    new BigDecimal("17.99"), new BigDecimal("7.99")));
-//            repository.save(new Product("Jack Stauber CD", "The 2nd Best CD in stores!",
-//                    new BigDecimal("17.99"), new BigDecimal("7.99")));
-//
-//            repository.findAll().forEach(product -> LOGGER.info("Product CREATED: {}", product));
-//        };
-//    }
+
+    @Bean
+    @Profile("!test")
+    public CommandLineRunner demo(ProductRepository repository) {
+        return args -> {
+            LOGGER.info("========Seeding the database...========");
+
+            repository.save(new Product("Adventure Time DVD", "The Best DVD in stores!",
+                    new BigDecimal("19.99"), new BigDecimal("9.99")));
+            repository.save(new Product("Steven Universe DVD", "The 2nd Best DVD in stores!",
+                    new BigDecimal("17.99"), new BigDecimal("7.99")));
+            repository.save(new Product("Meshuggah CD", "The Best CD in stores!",
+                    new BigDecimal("17.99"), new BigDecimal("7.99")));
+            repository.save(new Product("Jack Stauber CD", "The 2nd Best CD in stores!",
+                    new BigDecimal("17.99"), new BigDecimal("7.99")));
+
+            repository.findAll().forEach(product -> LOGGER.info("Product CREATED: {}", product));
+        };
+    }
 }
