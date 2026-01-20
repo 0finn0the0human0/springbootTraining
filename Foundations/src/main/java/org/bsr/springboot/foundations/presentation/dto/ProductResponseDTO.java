@@ -7,12 +7,15 @@
 
 package org.bsr.springboot.foundations.presentation.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.math.BigDecimal;
 
 public record ProductResponseDTO(
         Long id,
         String productName,
         String productDesc,
+        @JsonFormat(shape = JsonFormat.Shape.STRING) // Preserves scale from serialization
         BigDecimal retailPrice
 ) {
 }
