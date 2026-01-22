@@ -26,8 +26,7 @@ import java.util.Optional;
 
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -54,18 +53,11 @@ class ProductRestControllerTest {
     void shouldCreateProduct_whenPostRequestIsValid() throws Exception {
 
         // Arranging the test data
-        ProductRestRequestDTO requestDTO = new ProductRestRequestDTO(
-                "New Test",
-                "A New Test Item",
-                new BigDecimal("19.99")
-        );
+        ProductRestRequestDTO requestDTO = new ProductRestRequestDTO("AC-1 Test",
+                "A New Test Item", new BigDecimal("19.99"));
 
-        ProductResponseDTO responseDTO = new ProductResponseDTO(
-                1L,
-                "New Test",
-                "A New Test Item",
-                new BigDecimal("19.99")
-        );
+        ProductResponseDTO responseDTO = new ProductResponseDTO(1L, "AC-1 Test",
+                "A New Test Item", new BigDecimal("19.99"));
 
         // The mock behavior -> if the controller is called with this requestDTO, return this responseDTO.
         when(productService.createProductFromRequest(requestDTO)).thenReturn(responseDTO);
@@ -75,7 +67,7 @@ class ProductRestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                         {
-                        "productName":"New Test",
+                        "productName":"AC-1 Test",
                         "productDesc":"A New Test Item",
                         "retailPrice":19.99
                         }
@@ -96,8 +88,8 @@ class ProductRestControllerTest {
 
         // Arranging the test data
         Long productId = 1L;
-        String productName = "Widget";
-        String productDesc = "A new widget";
+        String productName = "AC-2 Test";
+        String productDesc = "A new test item";
         BigDecimal retailPrice = new BigDecimal("19.99");
 
         ProductResponseDTO responseDTO = new ProductResponseDTO(productId, productName, productDesc, retailPrice);
@@ -114,4 +106,37 @@ class ProductRestControllerTest {
                 .andExpect(jsonPath("$.retailPrice").value(retailPrice));
     }
 
+    /**
+     * Testing AC-3 PUT request. Updates the product, price is normalized to two decimal places and response
+     * reflects updated values
+     * */
+    @Test
+    void shouldUpdateProduct_whenPutRequestIsValid() throws Exception {
+        // Arranging the test data
+        Long productId = 1L;
+        ProductRestRequestDTO restRequestDTO = new ProductRestRequestDTO("AC-3 Test Updated",
+                "A new test item", new BigDecimal("19.99"));
+
+        ProductResponseDTO responseDTO = new ProductResponseDTO(productId, "AC-3 Test Updated",
+                "A new test item", new BigDecimal("19.99"));
+
+        // Mock service behavior -> when the controller requests this ID with updated fields, return the sample product
+        when(productService.updateProduct(productId, restRequestDTO)).thenReturn(Optional.of(responseDTO));
+
+        // Sends a fake HTTP PUT request to the controller and asserts that the JSON response matches what is expected
+        mockMvc.perform(put("/api/products/{id}", productId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                        "productName":"AC-3 Test Updated",
+                        "productDesc":"A new test item",
+                        "retailPrice":19.99
+                        }
+                        """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(productId))
+                .andExpect(jsonPath("$.productName").value(responseDTO.productName()))
+                .andExpect(jsonPath("$.productDesc").value(responseDTO.productDesc()))
+                .andExpect(jsonPath("$.retailPrice").value(responseDTO.retailPrice()));
+    }
 }
