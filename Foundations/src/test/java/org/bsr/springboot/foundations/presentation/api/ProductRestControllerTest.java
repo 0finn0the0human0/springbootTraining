@@ -139,4 +139,21 @@ class ProductRestControllerTest {
                 .andExpect(jsonPath("$.productDesc").value(responseDTO.productDesc()))
                 .andExpect(jsonPath("$.retailPrice").value(responseDTO.retailPrice()));
     }
+
+    /**
+     * Testing AC-4 Delete product. DELETE returns 204 No Content Product no longer appears in subsequent listings
+     */
+    @Test
+    void shouldDeleteProduct_whenIdExists() throws Exception{
+        // Arranging the test data
+        Long productId = 1L;
+
+        // Mock service behavior: product exists → delete returns true
+        when(productService.deleteProductFromRequest(productId)).thenReturn(true);
+
+        // Sends a fake HTTP DELETE request to the controller and asserts that the status return is No Content.
+        mockMvc.perform(delete("/api/products/{id}", productId))
+                .andExpect(status().isNoContent());
+
+    }
 }
