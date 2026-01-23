@@ -1,8 +1,8 @@
 
 # SpringBoot Roadmap 
 
-*At the end of each phase, I will build a project to showcase what I’ve learned. Each build comes from a Spring Guide (https://spring.io/guides), 
-lives in its own folder with pinned dependencies, and includes a learned.txt capturing key takeaways, gaps I discovered, and topics I researched further to complete the project.*
+*Each phase will contain guided tutorials from the Spring Guides (https://spring.io/guides) that showcase work completed through each guide. At the end of each phase, I will build a personal project to showcase what I’ve learned based on the Goal of each phase. 
+Each project at the end of every phase will be placed in its own folder outside of the Phase folders and contain a minimal Requirement Specification document, testing documentation, and a post-mortem with lessons learned all curated by me.*
 
 ## **Phase 1: Core Spring Boot Foundations**
 - Building a RESTful Web Service – Learn controllers, endpoints, and JSON 
