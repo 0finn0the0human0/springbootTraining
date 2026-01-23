@@ -4,9 +4,9 @@ Author: Benjamin Soto-Roberts
 
 Date Created: 12/30/2025
 
-Last Updated: 01/05/2026
+Last Updated: 01/07/2026
 
-Version: 1.1
+Version: 1.2
 
 ## Summary/Overview
 
@@ -153,7 +153,7 @@ Outcome: A working app exposing REST APIs and a basic Thymeleaf UI for querying 
 -	Deleting a product returns 204 and the record no longer appears in listings.
 
 **AC-5 Web (Thymeleaf) UI**
--	Thymeleaf list page displays seeded products; edit page updates description and redirects back to list showing the change.
+-	Thymeleaf form page allows fuzzy search for product names; results page returns a list of products or No products found. 
 
 **AC-6 Validation errors**
 -	Blank name → reported as error in both REST (400 with field messages) and UI (form error).
