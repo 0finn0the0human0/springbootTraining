@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -56,8 +57,12 @@ public class ProductWebControllerTest {
                 .andExpect(model().attributeExists("productNameQuery")); // Verifies the object exists in model
     }
 
+    /**
+     * Testing AC-5.1 UI Controller returns the correct Thymeleaf template and the model contains the DTO list for the
+     * results page when products are found with getProductsContaining.
+     * */
     @Test
-    void shouldReturnResultsPage_whenProductsFound() throws Exception{
+    void shouldReturnResults_whenProductsFound() throws Exception{
 
         // Arranging the test data
         ProductResponseDTO testProduct1 = new ProductResponseDTO(1L, "Comedy DVD", "Funny",
@@ -74,5 +79,22 @@ public class ProductWebControllerTest {
                 .andExpect(view().name("results")) // Verifies controller returns correct template
                 .andExpect(model().attributeExists("products")) // Verifies the object exists in the model
                 .andExpect(model().attribute("products", hasSize(2))); // Verifies size of return list
+    }
+
+    /**
+     * Testing AC‑5.2 UI controller returns the correct Thymeleaf template and the model contains an empty DTO list
+     * when no products match the fuzzy search. The results page should display the message "<p>No products found.</p>".
+     */
+    @Test
+    void shouldReturnNoResults_whenProductsNotFound() throws Exception{
+
+        // Mock service behavior → return an empty list to simulate no matching products
+        when(productService.getProductsContaining(any())).thenReturn(List.of());
+
+        mockMvc.perform(post("/").param("productName", "xyz"))
+                .andExpect(status().isOk()) // Verifies status return is a 200 OK
+                .andExpect(view().name("results")) // Verifies controller returns correct template
+                .andExpect(model().attribute("products", hasSize(0))) // Verifies size of return list - Empty
+                .andExpect(content().string(containsString("No products found."))); // Verifies the output str
     }
 }

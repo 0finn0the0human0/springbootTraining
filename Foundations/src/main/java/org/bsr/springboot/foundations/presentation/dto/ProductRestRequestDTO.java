@@ -23,7 +23,7 @@ public record ProductRestRequestDTO(
         String productDesc,
 
         @NotNull(message = "Retail Price is required.")
-        @DecimalMin(value = "10.00", message = "Retail Price must be >= $0.00")
+        @DecimalMin(value = "10.00", message = "Retail Price must be >= $10.00")
         @Digits(integer = 5, fraction = 2, message = "Retail Price max limit is 99999.99.")
         BigDecimal retailPrice
 ) {
