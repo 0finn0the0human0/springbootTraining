@@ -39,7 +39,7 @@ class ProductRestControllerTest {
     @MockitoBean
     private ProductService productService;
 
-    // @Autowired IS required here for test constructor injection
+    // @Autowired IS required here for test constructor injection because test classes are not Spring-managed components
     @Autowired
     ProductRestControllerTest(MockMvc mockMvc) {
         this.mockMvc = mockMvc;
