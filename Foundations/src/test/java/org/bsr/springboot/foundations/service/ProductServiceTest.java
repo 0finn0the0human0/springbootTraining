@@ -59,29 +59,74 @@ public class ProductServiceTest {
         entity.setRetailPrice(new BigDecimal("1.69"));
 
         // Fake DTO returned by the mapper
-        ProductResponseDTO dto = new ProductResponseDTO(
-                1L,
-                "Comedy DVD",
-                "Funny",
-                new BigDecimal("1.69")
-        );
+        ProductResponseDTO testProduct = new ProductResponseDTO(1L, "Comedy DVD", "Funny",
+                new BigDecimal("1.69"));
 
         // The mock behavior -> repository returns list containing the entity
         when(repository.findAllByProductNameContainingIgnoreCase("dvd")).thenReturn(List.of(entity));
 
         // The mock behavior -> mapper converts entity → DTO
-        when(mapper.toResponseDto(entity)).thenReturn(dto);
+        when(mapper.toResponseDto(entity)).thenReturn(testProduct);
 
         // Calls the service method under test
         List<ProductResponseDTO> results = service.getProductsContaining(request);
 
-        // Assert: verify the service returns the mapped DTO list
+        // Verify the service returns the mapped DTO list
         assertEquals(1, results.size(), "Expected exactly one result");
-        assertEquals("DVD Player", results.getFirst().productName());
+        assertEquals("Comedy DVD", results.getFirst().productName());
 
         // Verify repository was called with the trimmed search term
         verify(repository).findAllByProductNameContainingIgnoreCase("dvd");
         verify(mapper).toResponseDto(entity); // Verify mapper was used to convert the entity
     }
 
+
+    /**
+     * Testing service logic for getAllProducts. Verify that getAllProducts calls the repository correctly, maps the
+     * results, and returns the mapped list for all test products.
+     * */
+    @Test
+    void shouldReturnAllProducts_whenProductsExist() {
+
+        // Arranging the test data
+        Product entity1 = new Product();
+        entity1.setProductName("Comedy DVD");
+        entity1.setProductDesc("Funny");
+        entity1.setRetailPrice(new BigDecimal("1.69"));
+
+        Product entity2 = new Product();
+        entity2.setProductName("Action DVD");
+        entity2.setProductDesc("Action packed");
+        entity2.setRetailPrice(new BigDecimal("1.69"));
+
+        // Fake DTO returned by the mapper
+        ProductResponseDTO testProduct1 = new ProductResponseDTO(1L, "Comedy DVD", "Funny",
+                new BigDecimal("1.69"));
+
+        // Fake DTO returned by the mapper
+        ProductResponseDTO testProduct2 = new ProductResponseDTO(2L, "Action DVD",
+                "Action packed", new BigDecimal("1.69"));
+
+        // The mock behavior -> repository returns all entities
+        when(repository.findAll()).thenReturn(List.of(entity1, entity2));
+
+        // The mock behavior -> mapper converts entity → DTO
+        when(mapper.toResponseDto(entity1)).thenReturn(testProduct1);
+        when(mapper.toResponseDto(entity2)).thenReturn(testProduct2);
+
+        // Calls the service method under test
+        List<ProductResponseDTO> results = service.getAllProducts();
+
+        // Verify the service returns the mapped DTO list
+        assertEquals(2, results.size());
+        assertEquals("Comedy DVD", results.getFirst().productName());
+        assertEquals("Action DVD", results.getLast().productName());
+
+        // Verify repository was called
+        verify(repository).findAll();
+        verify(mapper).toResponseDto(entity1); // Verify mapper was used to convert the entity
+        verify(mapper).toResponseDto(entity2);
+
+
+    }
 }
