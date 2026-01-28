@@ -34,9 +34,8 @@ public class FoundationsApplication {
 
     /**
      * The method uses the CommandLineRunner to seed the database after the application context runs. Uses the
-     * ProductRepository to save products to the BD
+     * ProductRepository to save products to the db
      * */
-
     @Bean
     @Profile("!test")
     public CommandLineRunner demo(ProductRepository repository) {

@@ -23,6 +23,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -65,7 +66,7 @@ public class ProductServiceTest {
         // The mock behavior -> repository returns list containing the entity
         when(repository.findAllByProductNameContainingIgnoreCase("dvd")).thenReturn(List.of(entity));
 
-        // The mock behavior -> mapper converts entity → DTO
+        // The mock behavior -> mapper converts entity -> DTO
         when(mapper.toResponseDto(entity)).thenReturn(testProduct);
 
         // Calls the service method under test
@@ -110,7 +111,7 @@ public class ProductServiceTest {
         // The mock behavior -> repository returns all entities
         when(repository.findAll()).thenReturn(List.of(entity1, entity2));
 
-        // The mock behavior -> mapper converts entity → DTO
+        // The mock behavior -> mapper converts entity -> DTO
         when(mapper.toResponseDto(entity1)).thenReturn(testProduct1);
         when(mapper.toResponseDto(entity2)).thenReturn(testProduct2);
 
@@ -124,9 +125,50 @@ public class ProductServiceTest {
 
         // Verify repository was called
         verify(repository).findAll();
-        verify(mapper).toResponseDto(entity1); // Verify mapper was used to convert the entity
+
+        // Verify mapper was used to convert the entity
+        verify(mapper).toResponseDto(entity1);
         verify(mapper).toResponseDto(entity2);
 
 
+    }
+
+    /**
+     * Testing service logic for getProductById. Verify that getProductById calls the repository correctly, maps the
+     * result, and returns the mapped ProductResponseDTO for the test product.
+     * */
+    @Test
+    void shouldReturnProduct_whenProductIdIsFound() {
+
+        // Arranging the test data
+        Product entity = new Product();
+        entity.setProductName("Comedy DVD");
+        entity.setProductDesc("Funny");
+        entity.setRetailPrice(new BigDecimal("1.69"));
+
+        Long id = 1L;
+
+        // Fake DTO returned by the mapper
+        ProductResponseDTO testProduct = new ProductResponseDTO(1L, "Comedy DVD", "Funny",
+                new BigDecimal("1.69"));
+
+        // The mock behavior -> repository returns the entity by id
+        when(repository.findById(id)).thenReturn(Optional.of(entity));
+
+        // The mock behavior -> mapper converts entity -> DTO
+        when(mapper.toResponseDto(entity)).thenReturn(testProduct);
+
+        // Calls the service method under test
+        ProductResponseDTO result = service.getProductById(id).orElseThrow();
+
+        // Verify the service returns the mapped DTO
+        assertEquals("Comedy DVD", result.productName());
+        assertEquals(id, result.id());
+
+        // Verify repository was called
+        verify(repository).findById(id);
+
+        // Verify mapper was used to convert the entity
+        verify(mapper).toResponseDto(entity);
     }
 }

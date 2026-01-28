@@ -13,7 +13,6 @@
 package org.bsr.springboot.foundations.persistence.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMin;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
