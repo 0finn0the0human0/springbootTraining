@@ -28,7 +28,7 @@ public class ProductService {
     // Declared final because dependencies are injected once via constructor and never reassigned
     private final ProductRepository repository;
     private final ProductMapper mapper;
-    private final BigDecimal STNDRD_RETAIL_MARKUP = BigDecimal.TEN;
+    private static final BigDecimal STNDRD_RETAIL_MARKUP = BigDecimal.TEN;
 
     /*The ProductRepository is injected into the constructor. SpringBoot automatically injects dependencies into a class
      with a single constructor*/

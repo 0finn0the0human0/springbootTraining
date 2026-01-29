@@ -183,7 +183,7 @@ public class ProductServiceTest {
         Product entity = new Product();
         entity.setProductName("Comedy DVD");
         entity.setProductDesc("Funny");
-        entity.setRetailPrice(new BigDecimal("1.69"));
+        entity.setRetailPrice(new BigDecimal("10.69"));
 
         // Fake DTO request to create
         ProductRestRequestDTO restRequestDTO = new ProductRestRequestDTO("Comedy DVD", "Funny",
@@ -193,24 +193,30 @@ public class ProductServiceTest {
         ProductResponseDTO testProduct = new ProductResponseDTO(1L, "Comedy DVD", "Funny",
                 new BigDecimal("10.69"));
 
+        BigDecimal STNDRD_RETAIL_MARKUP = BigDecimal.TEN; // For testing vendor price validation
 
-        // The mock behavior -> repository returns the entity by id
-        when(repository.findById(id)).thenReturn(Optional.of(entity));
+        // The mock behavior -> mapper converts DTO -> entity
+        when(mapper.toProduct(restRequestDTO)).thenReturn(entity);
+
+        // The mock behavior -> repository saves the entity
+        when(repository.save(entity)).thenReturn(entity);
 
         // The mock behavior -> mapper converts entity -> DTO
         when(mapper.toResponseDto(entity)).thenReturn(testProduct);
 
         // Calls the service method under test
-        ProductResponseDTO result = service.getProductById(id).orElseThrow();
+        ProductResponseDTO result = service.createProductFromRequest(restRequestDTO);
 
-        // Verify the service returns the mapped DTO
+        // Assert the service returns the mapped DTO
         assertEquals("Comedy DVD", result.productName());
-        assertEquals(id, result.id());
+        assertEquals(1L, result.id());
+        assertEquals( new BigDecimal("10.69").subtract(STNDRD_RETAIL_MARKUP), entity.getVendorPrice() );
 
         // Verify repository was called
-        verify(repository).findById(id);
+        verify(repository).save(entity);
 
         // Verify mapper was used to convert the entity
+        verify(mapper).toProduct(restRequestDTO);
         verify(mapper).toResponseDto(entity);
     }
 }
