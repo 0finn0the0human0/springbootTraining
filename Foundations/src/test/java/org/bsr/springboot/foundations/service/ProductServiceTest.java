@@ -13,6 +13,7 @@ import org.bsr.springboot.foundations.persistence.entity.Product;
 import org.bsr.springboot.foundations.persistence.repository.ProductRepository;
 import org.bsr.springboot.foundations.presentation.dto.ProductRequestDTO;
 import org.bsr.springboot.foundations.presentation.dto.ProductResponseDTO;
+import org.bsr.springboot.foundations.presentation.dto.ProductRestRequestDTO;
 import org.bsr.springboot.foundations.presentation.mapper.ProductMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -61,7 +62,7 @@ public class ProductServiceTest {
 
         // Fake DTO returned by the mapper
         ProductResponseDTO testProduct = new ProductResponseDTO(1L, "Comedy DVD", "Funny",
-                new BigDecimal("1.69"));
+                new BigDecimal("10.69"));
 
         // The mock behavior -> repository returns list containing the entity
         when(repository.findAllByProductNameContainingIgnoreCase("dvd")).thenReturn(List.of(entity));
@@ -93,20 +94,20 @@ public class ProductServiceTest {
         Product entity1 = new Product();
         entity1.setProductName("Comedy DVD");
         entity1.setProductDesc("Funny");
-        entity1.setRetailPrice(new BigDecimal("1.69"));
+        entity1.setRetailPrice(new BigDecimal("10.69"));
 
         Product entity2 = new Product();
         entity2.setProductName("Action DVD");
         entity2.setProductDesc("Action packed");
-        entity2.setRetailPrice(new BigDecimal("1.69"));
+        entity2.setRetailPrice(new BigDecimal("10.69"));
 
         // Fake DTO returned by the mapper
         ProductResponseDTO testProduct1 = new ProductResponseDTO(1L, "Comedy DVD", "Funny",
-                new BigDecimal("1.69"));
+                new BigDecimal("10.69"));
 
         // Fake DTO returned by the mapper
         ProductResponseDTO testProduct2 = new ProductResponseDTO(2L, "Action DVD",
-                "Action packed", new BigDecimal("1.69"));
+                "Action packed", new BigDecimal("10.69"));
 
         // The mock behavior -> repository returns all entities
         when(repository.findAll()).thenReturn(List.of(entity1, entity2));
@@ -144,13 +145,54 @@ public class ProductServiceTest {
         Product entity = new Product();
         entity.setProductName("Comedy DVD");
         entity.setProductDesc("Funny");
-        entity.setRetailPrice(new BigDecimal("1.69"));
+        entity.setRetailPrice(new BigDecimal("10.69"));
 
         Long id = 1L;
 
         // Fake DTO returned by the mapper
         ProductResponseDTO testProduct = new ProductResponseDTO(1L, "Comedy DVD", "Funny",
-                new BigDecimal("1.69"));
+                new BigDecimal("10.69"));
+
+        // The mock behavior -> repository returns the entity by id
+        when(repository.findById(id)).thenReturn(Optional.of(entity));
+
+        // The mock behavior -> mapper converts entity -> DTO
+        when(mapper.toResponseDto(entity)).thenReturn(testProduct);
+
+        // Calls the service method under test
+        ProductResponseDTO result = service.getProductById(id).orElseThrow();
+
+        // Verify the service returns the mapped DTO
+        assertEquals("Comedy DVD", result.productName());
+        assertEquals(id, result.id());
+
+        // Verify repository was called
+        verify(repository).findById(id);
+
+        // Verify mapper was used to convert the entity
+        verify(mapper).toResponseDto(entity);
+    }
+
+    /**
+     * Testing service logic for createProductFromRequest. Verify that createProductFromRequest calls the repository
+     * correctly, maps the request, and returns the mapped ProductResponseDTO for the test product.
+     * */
+    @Test
+    void shouldCreateProduct_whenRequestIsValid() {
+        // Arranging the test data
+        Product entity = new Product();
+        entity.setProductName("Comedy DVD");
+        entity.setProductDesc("Funny");
+        entity.setRetailPrice(new BigDecimal("1.69"));
+
+        // Fake DTO request to create
+        ProductRestRequestDTO restRequestDTO = new ProductRestRequestDTO("Comedy DVD", "Funny",
+                new BigDecimal("10.69"));
+
+        // Fake DTO returned by the mapper
+        ProductResponseDTO testProduct = new ProductResponseDTO(1L, "Comedy DVD", "Funny",
+                new BigDecimal("10.69"));
+
 
         // The mock behavior -> repository returns the entity by id
         when(repository.findById(id)).thenReturn(Optional.of(entity));

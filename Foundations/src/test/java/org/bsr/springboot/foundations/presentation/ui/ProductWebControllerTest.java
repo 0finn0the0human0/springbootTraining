@@ -66,10 +66,10 @@ public class ProductWebControllerTest {
 
         // Arranging the test data
         ProductResponseDTO testProduct1 = new ProductResponseDTO(1L, "Comedy DVD", "Funny",
-                new BigDecimal("1.69"));
+                new BigDecimal("10.69"));
 
         ProductResponseDTO testProduct2 = new ProductResponseDTO(2L, "Action DVD",
-                "Action packed", new BigDecimal("1.69"));
+                "Action packed", new BigDecimal("10.69"));
 
         // The mock behavior -> if there is any return on getProductsContaining then return the list of test data
         when(productService.getProductsContaining(any())).thenReturn(List.of(testProduct1, testProduct2));
