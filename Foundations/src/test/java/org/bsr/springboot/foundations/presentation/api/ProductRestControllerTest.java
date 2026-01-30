@@ -48,7 +48,8 @@ class ProductRestControllerTest {
     /**
      * Testing AC-1 Create Product. Creating a product via POST /api/products returns 201 Created and a JSON body
      * containing id, name, description, price.
-     * */
+     *
+     */
     @Test
     void shouldCreateProduct_whenPostRequestIsValid() throws Exception {
 
@@ -66,12 +67,12 @@ class ProductRestControllerTest {
         mockMvc.perform(post("/api/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                        {
-                        "productName":"AC-1 Test",
-                        "productDesc":"A New Test Item",
-                        "retailPrice":19.99
-                        }
-                        """))
+                                {
+                                "productName":"AC-1 Test",
+                                "productDesc":"A New Test Item",
+                                "retailPrice":19.99
+                                }
+                                """))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(responseDTO.id()))
                 .andExpect(jsonPath("$.productName").value(responseDTO.productName()))
@@ -82,7 +83,8 @@ class ProductRestControllerTest {
     /**
      * Testing AC-2 Get Product by id. A valid id returns a 200 OK with and a JSON body containing id, name,
      * description, price.
-     * */
+     *
+     */
     @Test
     void shouldReturnProductById() throws Exception {
 
@@ -109,7 +111,8 @@ class ProductRestControllerTest {
     /**
      * Testing AC-3 PUT request. Updates the product, price is normalized to two decimal places and response
      * reflects updated values
-     * */
+     *
+     */
     @Test
     void shouldUpdateProduct_whenPutRequestIsValid() throws Exception {
         // Arranging the test data
@@ -125,14 +128,14 @@ class ProductRestControllerTest {
 
         // Sends a fake HTTP PUT request to the controller and asserts that the JSON response matches what is expected
         mockMvc.perform(put("/api/products/{id}", productId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        {
-                        "productName":"AC-3 Test Updated",
-                        "productDesc":"A new test item",
-                        "retailPrice":19.99
-                        }
-                        """))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                "productName":"AC-3 Test Updated",
+                                "productDesc":"A new test item",
+                                "retailPrice":19.99
+                                }
+                                """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(productId))
                 .andExpect(jsonPath("$.productName").value(responseDTO.productName()))
@@ -144,7 +147,7 @@ class ProductRestControllerTest {
      * Testing AC-4 Delete product. DELETE returns 204 No Content Product no longer appears in subsequent listings
      */
     @Test
-    void shouldDeleteProduct_whenIdExists() throws Exception{
+    void shouldDeleteProduct_whenIdExists() throws Exception {
         // Arranging the test data
         Long productId = 1L;
 

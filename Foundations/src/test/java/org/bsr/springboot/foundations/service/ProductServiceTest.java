@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -46,7 +47,8 @@ public class ProductServiceTest {
     /**
      * Testing service logic for getProductsContaining. Verify that getProductsContaining() trims the search term,
      * calls the repository correctly, maps the results, and returns the mapped list.
-     * */
+     *
+     */
     @Test
     void shouldReturnMappedProduct_whenSearchMatches() {
 
@@ -86,7 +88,8 @@ public class ProductServiceTest {
     /**
      * Testing service logic for getAllProducts. Verify that getAllProducts calls the repository correctly, maps the
      * results, and returns the mapped list for all test products.
-     * */
+     *
+     */
     @Test
     void shouldReturnAllProducts_whenProductsExist() {
 
@@ -137,7 +140,8 @@ public class ProductServiceTest {
     /**
      * Testing service logic for getProductById. Verify that getProductById calls the repository correctly, maps the
      * result, and returns the mapped ProductResponseDTO for the test product.
-     * */
+     *
+     */
     @Test
     void shouldReturnProduct_whenProductIdIsFound() {
 
@@ -176,7 +180,8 @@ public class ProductServiceTest {
     /**
      * Testing service logic for createProductFromRequest. Verify that createProductFromRequest calls the repository
      * correctly, maps the request, and returns the mapped ProductResponseDTO for the test product.
-     * */
+     *
+     */
     @Test
     void shouldCreateProduct_whenRequestIsValid() {
         // Arranging the test data
@@ -210,7 +215,7 @@ public class ProductServiceTest {
         // Assert the service returns the mapped DTO
         assertEquals("Comedy DVD", result.productName());
         assertEquals(1L, result.id());
-        assertEquals( new BigDecimal("10.69").subtract(STNDRD_RETAIL_MARKUP), entity.getVendorPrice() );
+        assertEquals(new BigDecimal("10.69").subtract(STNDRD_RETAIL_MARKUP), entity.getVendorPrice());
 
         // Verify repository was called
         verify(repository).save(entity);
@@ -223,7 +228,8 @@ public class ProductServiceTest {
     /**
      * Testing service logic for updateProduct. Verify that updateProduct calls the repository correctly, maps the
      * result, and returns the mapped ProductResponseDTO for the test product.
-     * */
+     *
+     */
     @Test
     void shouldUpdateProduct_whenProductIdIsFound() {
 
@@ -274,4 +280,35 @@ public class ProductServiceTest {
         assertEquals(new BigDecimal("12.99").subtract(BigDecimal.TEN), existing.getVendorPrice());
     }
 
+
+    /**
+     * Testing service logic for deleteProductFromRequest. Verifies that the service checks existence
+     * and performs a delete operation when the product is found.
+     */
+    @Test
+    void shouldDeleteProduct_whenProductIsFound() {
+
+        // Arranging the test data
+        Long id = 1L;
+
+        // Existing product in DB
+        Product existing = new Product();
+        existing.setProductName("Comedy DVD");
+        existing.setProductDesc("Funny");
+        existing.setRetailPrice(new BigDecimal("10.69"));
+
+        // The mock behavior -> repository find
+        when(repository.existsById(id)).thenReturn(true);
+
+        // Calls the service method under test
+        boolean result = service.deleteProductFromRequest(id);
+
+        // Assert result is true for valid delete
+        assertTrue(result);
+
+        // Verify repository methods were called
+        verify(repository).existsById(id);
+        verify(repository).deleteById(id);
+
+    }
 }
