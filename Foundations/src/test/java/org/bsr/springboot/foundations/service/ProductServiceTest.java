@@ -219,4 +219,59 @@ public class ProductServiceTest {
         verify(mapper).toProduct(restRequestDTO);
         verify(mapper).toResponseDto(entity);
     }
+
+    /**
+     * Testing service logic for updateProduct. Verify that updateProduct calls the repository correctly, maps the
+     * result, and returns the mapped ProductResponseDTO for the test product.
+     * */
+    @Test
+    void shouldUpdateProduct_whenProductIdIsFound() {
+
+        // Arranging the test data
+        Long id = 1L;
+
+        // Existing product in DB
+        Product existing = new Product();
+        existing.setProductName("Comedy DVD");
+        existing.setProductDesc("Funny");
+        existing.setRetailPrice(new BigDecimal("10.69"));
+
+        // Incoming update request
+        ProductRestRequestDTO updateRequest =
+                new ProductRestRequestDTO("Comedy DVD - Updated", "Still funny",
+                        new BigDecimal("12.99"));
+
+        // After saving, the same entity is returned
+        ProductResponseDTO updatedDto =
+                new ProductResponseDTO(id, "Comedy DVD - Updated", "Still funny",
+                        new BigDecimal("12.99"));
+
+        // The mock behavior -> repository find
+        when(repository.findById(id)).thenReturn(Optional.of(existing));
+
+        // The mock behavior -> repository save
+        when(repository.save(existing)).thenReturn(existing);
+
+        // The mock behavior -> mapper converting saved entity to DTO
+        when(mapper.toResponseDto(existing)).thenReturn(updatedDto);
+
+        // Calls the service method under test
+        ProductResponseDTO result = service.updateProduct(id, updateRequest).orElseThrow();
+
+        // Assert the result has been update and the id is the same
+        assertEquals("Comedy DVD - Updated", result.productName());
+        assertEquals(id, result.id());
+
+        // Verify interactions
+        verify(repository).findById(id);
+        verify(repository).save(existing);
+        verify(mapper).toResponseDto(existing);
+
+        // Assert the entity was mutated correctly
+        assertEquals("Comedy DVD - Updated", existing.getProductName());
+        assertEquals("Still funny", existing.getProductDesc());
+        assertEquals(new BigDecimal("12.99"), existing.getRetailPrice());
+        assertEquals(new BigDecimal("12.99").subtract(BigDecimal.TEN), existing.getVendorPrice());
+    }
+
 }
