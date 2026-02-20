@@ -24,9 +24,6 @@ import java.util.List;
 @RequestMapping("/api/products")
 public class ProductRestController {
 
-    // A static logger to log important transactions
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProductRestController.class);
-
     // Final for thread safety
     private final ProductService productService;
 
@@ -62,9 +59,7 @@ public class ProductRestController {
      */
     @PostMapping
     public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductRestRequestDTO requestDTO) {
-        LOGGER.info("CREATE Request - Product Name: {}", requestDTO.productName());
         ProductResponseDTO createdProduct = productService.createProductFromRequest(requestDTO);
-        LOGGER.info("Product CREATED - Id: {}, Product Name: {}", createdProduct.id(), createdProduct.productName());
         // Returns 201 created and the uri of the resource
         return ResponseEntity.created(URI.create("/api/products/" + createdProduct.id())).body(createdProduct);
     }
@@ -77,15 +72,7 @@ public class ProductRestController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        LOGGER.warn("DELETE Request - Product Id: {}", id);
         boolean deleted = productService.deleteProductFromRequest(id);
-
-        if (deleted) {
-            LOGGER.warn("DELETE Request SUCCESSFUL for Product ID {}", id);
-        } else {
-            LOGGER.warn("DELETE Request FILED, Product Id {} not found", id);
-        }
-
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
@@ -97,16 +84,8 @@ public class ProductRestController {
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long id,
                                                             @Valid @RequestBody ProductRestRequestDTO requestDTO) {
-        LOGGER.info("UPDATE request - Product id: {}, new name: '{}'", id, requestDTO.productName());
-
         return productService.updateProduct(id, requestDTO)
-                .map(updated -> {
-                    LOGGER.info("Product UPDATED - id: {}, name: '{}'", updated.id(), updated.productName());
-                    return ResponseEntity.ok(updated);
-                })
-                .orElseGet(() -> {
-                    LOGGER.warn("UPDATE failed - Product id: {} not found", id);
-                    return ResponseEntity.notFound().build();
-                });
+                .map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+
     }
 }

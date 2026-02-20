@@ -7,7 +7,7 @@
  * Created: 01/16/26
  * */
 
-package org.bsr.springboot.foundations.config;
+package org.bsr.springboot.foundations.presentation.exception;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
