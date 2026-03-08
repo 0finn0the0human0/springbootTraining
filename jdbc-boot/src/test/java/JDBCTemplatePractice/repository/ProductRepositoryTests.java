@@ -8,11 +8,12 @@
 
 package JDBCTemplatePractice.repository;
 
+import JDBCTemplatePractice.persistence.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import JDBCTemplatePractice.entity.Product;
+import JDBCTemplatePractice.persistence.Product;
 import JDBCTemplatePractice.exception.ProductNotFoundException;
 
 import java.math.BigDecimal;
@@ -83,11 +84,12 @@ public class ProductRepositoryTests {
     @DirtiesContext
     void shouldSaveProduct_whenRequestIsValid() {
         // Arrange the test data
-        Product request = new Product(UUID.randomUUID(),
-                "Test Product",
-                "Test Description...",
-                new BigDecimal("19.99"),
-                new BigDecimal("12.99"));
+        Product request = new Product();
+        request.setUuid(UUID.randomUUID());
+        request.setProductName("Test Product");
+        request.setProductDesc("Test Description...");
+        request.setRetailPrice(new BigDecimal("19.99"));
+        request.setVendorPrice(new BigDecimal("12.99"));
 
         // Sends the request to db to return a valid product response object after save request
         Product response = productRepository.saveProduct(request);
@@ -104,11 +106,13 @@ public class ProductRepositoryTests {
     @Test
     void shouldUpdateProduct_whenRequestIsValid() {
         // Arrange the test data
-        Product request = new Product(UUID.fromString("4f8b6f8e-92ba-4c2d-ba98-cb0c442176f7"),
-                "Steven Universe DVD",
-                "The 2nd best dvd in the world",
-                new BigDecimal("15.99"),
-                new BigDecimal("10.99"));
+        Product request = new Product();
+        request.setUuid(UUID.fromString("4f8b6f8e-92ba-4c2d-ba98-cb0c442176f7"));
+        request.setProductName("Steven Universe DVD");
+        request.setProductDesc("The 2nd best dvd in the world");
+        request.setRetailPrice(new BigDecimal("15.99"));
+        request.setVendorPrice(new BigDecimal("10.99"));
+
 
         // Sends the request to db to return a valid product response object after save request
         Product response = productRepository.updateProduct(request);

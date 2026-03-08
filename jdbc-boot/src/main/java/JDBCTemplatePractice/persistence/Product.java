@@ -6,7 +6,7 @@
  * Created: 03/03/2026
  */
 
-package JDBCTemplatePractice.entity;
+package JDBCTemplatePractice.persistence;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -14,26 +14,14 @@ import java.util.UUID;
 public class Product {
 
     private UUID uuid;
-
     private String productName;
-
     private String productDesc;
-
     private BigDecimal retailPrice;
-
     private BigDecimal vendorPrice;
 
     public Product() {
     }
 
-    public Product(UUID uuid, String productName, String productDesc, BigDecimal retailPrice,
-                   BigDecimal vendorPrice) {
-        this.uuid = uuid;
-        this.productName = productName;
-        this.productDesc = productDesc;
-        this.retailPrice = retailPrice;
-        this.vendorPrice = vendorPrice;
-    }
 
     public UUID getUuid() {
         return uuid;
