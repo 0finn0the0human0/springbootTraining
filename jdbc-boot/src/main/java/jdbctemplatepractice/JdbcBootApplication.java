@@ -7,7 +7,7 @@
  * Created: 03/03/2026
  */
 
-package JDBCTemplatePractice;
+package jdbctemplatepractice;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

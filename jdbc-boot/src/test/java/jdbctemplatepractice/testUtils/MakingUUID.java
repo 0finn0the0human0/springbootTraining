@@ -1,4 +1,4 @@
-package JDBCTemplatePractice.testUtils;
+package jdbctemplatepractice.testUtils;
 
 import java.util.UUID;
 

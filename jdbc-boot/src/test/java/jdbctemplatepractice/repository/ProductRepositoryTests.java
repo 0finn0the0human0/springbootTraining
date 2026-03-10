@@ -6,15 +6,15 @@
  */
 
 
-package JDBCTemplatePractice.repository;
+package jdbctemplatepractice.repository;
 
-import JDBCTemplatePractice.persistence.ProductRepository;
+import jdbctemplatepractice.persistence.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import JDBCTemplatePractice.persistence.Product;
-import JDBCTemplatePractice.exception.ProductNotFoundException;
+import jdbctemplatepractice.persistence.Product;
+import jdbctemplatepractice.exception.ProductNotFoundException;
 
 import java.math.BigDecimal;
 import java.util.List;
