@@ -6,7 +6,7 @@
  * Created: 03/04/2026
  */
 
-package jdbctemplatepractice.exception;
+package jdbctemplatepractice.product.exception;
 
 
 public class ProductNotFoundException extends RuntimeException {

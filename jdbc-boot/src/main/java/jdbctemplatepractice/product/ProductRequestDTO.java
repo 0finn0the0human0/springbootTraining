@@ -5,7 +5,7 @@
  * Created: 03/09/2026
  */
 
-package jdbctemplatepractice.presentation;
+package jdbctemplatepractice.product;
 
 import jakarta.validation.constraints.*;
 

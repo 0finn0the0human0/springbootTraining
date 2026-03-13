@@ -6,14 +6,14 @@
  * Created: 03/03/2026
  */
 
-package jdbctemplatepractice.persistence;
+package jdbctemplatepractice.product;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import jdbctemplatepractice.exception.ProductNotFoundException;
+import jdbctemplatepractice.product.exception.ProductNotFoundException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

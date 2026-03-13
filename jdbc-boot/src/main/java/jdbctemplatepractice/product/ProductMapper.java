@@ -5,9 +5,8 @@
  * Created: 03/09/2026
  */
 
-package jdbctemplatepractice.presentation;
+package jdbctemplatepractice.product;
 
-import jdbctemplatepractice.persistence.Product;
 import org.springframework.stereotype.Component;
 
 @Component

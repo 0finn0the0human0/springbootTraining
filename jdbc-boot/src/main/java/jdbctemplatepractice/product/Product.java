@@ -6,7 +6,7 @@
  * Created: 03/03/2026
  */
 
-package jdbctemplatepractice.persistence;
+package jdbctemplatepractice.product;
 
 import java.math.BigDecimal;
 import java.util.UUID;

@@ -6,15 +6,13 @@
  */
 
 
-package jdbctemplatepractice.repository;
+package jdbctemplatepractice.product;
 
-import jdbctemplatepractice.persistence.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import jdbctemplatepractice.persistence.Product;
-import jdbctemplatepractice.exception.ProductNotFoundException;
+import jdbctemplatepractice.product.exception.ProductNotFoundException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,6 +23,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 public class ProductRepositoryTests {
+
+    private final UUID VALID_UUID = UUID.fromString("7193e96f-5c3a-4231-bbf0-0f2388d654ad");
+    private final UUID INVALID_UUID = UUID.fromString("3f44afd4-cb79-4fd3-b57d-c06a02c710c5");
 
     // -- Data field
     @Autowired
@@ -37,14 +38,13 @@ public class ProductRepositoryTests {
     @Test
     void shouldReturnProduct_whenValidUUID() {
         // Arrange the test data
-        UUID request = UUID.fromString("7193e96f-5c3a-4231-bbf0-0f2388d654ad");
-        Product response = productRepository.getProductById(request);
+        Product request = productRepository.getProductById(VALID_UUID);
 
         // Checks test data request results
-        assertThat(response).isNotNull();
-        assertThat(response.getProductName()).isEqualTo("Adventure Time DVD");
+        assertThat(request).isNotNull();
+        assertThat(request.getProductName()).isEqualTo("Adventure Time DVD");
 
-        System.out.println(response); // Display data to console for verification
+        System.out.println(request); // Display data to console for verification
 
     }
 
@@ -53,11 +53,9 @@ public class ProductRepositoryTests {
      */
     @Test
     void shouldThrowException_whenUUIDNotFound() {
-        // Arrange the test data - Unknown uuid
-        UUID request = UUID.fromString("3f44afd4-cb79-4fd3-b57d-c06a02c710c5");
 
         // Checks response results
-        assertThatThrownBy(() -> productRepository.getProductById(request))
+        assertThatThrownBy(() -> productRepository.getProductById(INVALID_UUID))
                 .isInstanceOf(ProductNotFoundException.class);
     }
 
