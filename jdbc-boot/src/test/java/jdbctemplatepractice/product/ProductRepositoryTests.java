@@ -1,6 +1,6 @@
 /**
  * Project: JDBCTemplate Practice
- * Description: A Test class that tests the implementation of the
+ * Description: Tests the repository class and methods
  * Author: Benjamin Soto-Roberts
  * Created: 03/03/2026
  */
@@ -10,7 +10,8 @@ package jdbctemplatepractice.product;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.jdbc.test.autoconfigure.JdbcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import jdbctemplatepractice.product.exception.ProductNotFoundException;
 
@@ -21,7 +22,8 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest
+@JdbcTest
+@Import(ProductRepository.class)
 public class ProductRepositoryTests {
 
     private final UUID VALID_UUID = UUID.fromString("7193e96f-5c3a-4231-bbf0-0f2388d654ad");
@@ -79,7 +81,6 @@ public class ProductRepositoryTests {
      * impact other tests
      */
     @Test
-    @DirtiesContext
     void shouldSaveProduct_whenRequestIsValid() {
         // Arrange the test data
         Product request = new Product();
@@ -121,7 +122,6 @@ public class ProductRepositoryTests {
     }
 
     @Test
-    @DirtiesContext
     void shouldDeleteProduct_whenRequestIsValid() {
         // Arrange the test data
         UUID request = UUID.fromString("7193e96f-5c3a-4231-bbf0-0f2388d654ad");
