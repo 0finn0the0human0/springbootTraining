@@ -1,9 +1,18 @@
+/**
+ * Project: JDBCTemplate Practice
+ * Description: Service class owns the business logic and coordinates the flow of data between the repo and the mapper
+ * Author: Benjamin Soto-Roberts
+ * Created: 03/13/2026
+ */
+
 package jdbctemplatepractice.product;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)  // safe default for reads
@@ -17,7 +26,30 @@ public class ProductService {
         this.mapper = mapper;
     }
 
+
     public List<ProductResponseDTO> getAllProducts() {
-        return repository.getAllProducts().stream().map(mapper::toResponse).toList();
+        return repository.findAllProducts().stream().map(mapper::toResponse).toList();
     }
+
+    public ProductResponseDTO getProductById(UUID uuid) {
+        return mapper.toResponse(repository.findProductById(uuid));
+    }
+
+    @Transactional
+    public ProductResponseDTO createProduct(ProductRequestDTO productRequestDTO) {
+        Product p = mapper.toProduct(productRequestDTO);
+        p.setUuid(UUID.randomUUID());
+        p.setRetailPrice(calculateRetailPrice(p.getVendorPrice()));
+
+        Product response = repository.saveProduct(p);
+        return mapper.toResponse(response);
+    }
+
+    private BigDecimal calculateRetailPrice(BigDecimal vendorPrice) {
+        return vendorPrice.multiply(new BigDecimal("1.25"));
+    }
+
+
 }
+
+

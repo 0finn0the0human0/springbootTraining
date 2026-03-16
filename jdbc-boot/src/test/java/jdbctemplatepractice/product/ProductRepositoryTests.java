@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.test.autoconfigure.JdbcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.annotation.DirtiesContext;
 import jdbctemplatepractice.product.exception.ProductNotFoundException;
 
 import java.math.BigDecimal;
@@ -40,7 +39,7 @@ public class ProductRepositoryTests {
     @Test
     void shouldReturnProduct_whenValidUUID() {
         // Arrange the test data
-        Product request = productRepository.getProductById(VALID_UUID);
+        Product request = productRepository.findProductById(VALID_UUID);
 
         // Checks test data request results
         assertThat(request).isNotNull();
@@ -57,7 +56,7 @@ public class ProductRepositoryTests {
     void shouldThrowException_whenUUIDNotFound() {
 
         // Checks response results
-        assertThatThrownBy(() -> productRepository.getProductById(INVALID_UUID))
+        assertThatThrownBy(() -> productRepository.findProductById(INVALID_UUID))
                 .isInstanceOf(ProductNotFoundException.class);
     }
 
@@ -67,7 +66,7 @@ public class ProductRepositoryTests {
     @Test
     void shouldReturnAllProducts() {
         // Arrange test data
-        List<Product> response = productRepository.getAllProducts();
+        List<Product> response = productRepository.findAllProducts();
 
         // Checks response results
         assertThat(response).isNotNull();
@@ -130,7 +129,7 @@ public class ProductRepositoryTests {
         productRepository.deleteProductById(request);
 
         // Checks response results
-        assertThatThrownBy(() -> productRepository.getProductById(request))
+        assertThatThrownBy(() -> productRepository.findProductById(request))
                 .isInstanceOf(ProductNotFoundException.class);
     }
 }

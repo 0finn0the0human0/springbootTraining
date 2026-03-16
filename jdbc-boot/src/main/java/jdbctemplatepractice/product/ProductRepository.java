@@ -56,7 +56,7 @@ public class ProductRepository {
      * Returns a list of products from the product table through select all statement. Uses the ProductRowMapper to map
      * the rows and contents to the product list.
      * */
-    public List<Product> getAllProducts() {
+    public List<Product> findAllProducts() {
         String sql = "SELECT * FROM PRODUCTS";
         return jdbcTemplate.query(sql, PRODUCT_ROW_MAPPER);
     }
@@ -66,7 +66,7 @@ public class ProductRepository {
      * ProductRowMapper to map the row contents to the product. Catches EmptyResultDataAccessException if queryForObject
      * throws exception and throws ProductNotFoundException that propagates up the call stack
      * */
-    public Product getProductById(UUID uuid) {
+    public Product findProductById(UUID uuid) {
         String sql = "SELECT * FROM PRODUCTS WHERE UUID = ?";
 
         try {
@@ -90,7 +90,7 @@ public class ProductRepository {
                 product.getRetailPrice(),
                 product.getVendorPrice());
 
-        return getProductById(product.getUuid());
+        return findProductById(product.getUuid());
     }
 
     /**
@@ -113,7 +113,7 @@ public class ProductRepository {
             throw new ProductNotFoundException("Product not found: " + product.getUuid());
         }
 
-        return getProductById(product.getUuid());
+        return findProductById(product.getUuid());
 
     }
 

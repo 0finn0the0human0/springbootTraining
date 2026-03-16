@@ -9,6 +9,7 @@
 package jdbctemplatepractice.product;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.UUID;
 
 public class Product {
@@ -52,7 +53,7 @@ public class Product {
     }
 
     public void setRetailPrice(BigDecimal retailPrice) {
-        this.retailPrice = retailPrice;
+        this.retailPrice = retailPrice.setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getVendorPrice() {
@@ -60,7 +61,7 @@ public class Product {
     }
 
     public void setVendorPrice(BigDecimal vendorPrice) {
-        this.vendorPrice = vendorPrice;
+        this.vendorPrice = vendorPrice.setScale(2, RoundingMode.HALF_UP);
     }
 
     @Override
