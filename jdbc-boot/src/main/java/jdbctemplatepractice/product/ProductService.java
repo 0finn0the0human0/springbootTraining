@@ -1,6 +1,8 @@
 /**
  * Project: JDBCTemplate Practice
- * Description: Service class owns the business logic and coordinates the flow of data between the repo and the mapper
+ * Description: Service class owns the business logic and coordinates the flow of data between the repo and the mapper.
+ *              For all instances where product may not be found, repository propagates a custom exception so service
+ *              can operate as such.
  * Author: Benjamin Soto-Roberts
  * Created: 03/13/2026
  */
@@ -36,13 +38,29 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponseDTO createProduct(ProductRequestDTO productRequestDTO) {
-        Product p = mapper.toProduct(productRequestDTO);
+    public ProductResponseDTO postProduct(ProductRequestDTO requestDTO) {
+        Product p = mapper.toProduct(requestDTO);
         p.setUuid(UUID.randomUUID());
         p.setRetailPrice(calculateRetailPrice(p.getVendorPrice()));
 
         Product response = repository.saveProduct(p);
         return mapper.toResponse(response);
+    }
+
+    @Transactional
+    public ProductResponseDTO putProduct(UUID uuid, ProductRequestDTO requestDTO) {
+        Product p = mapper.toProduct(requestDTO);
+        p.setUuid(uuid);
+        p.setRetailPrice(calculateRetailPrice(p.getVendorPrice()));
+
+
+        Product response = repository.updateProduct(p);
+        return mapper.toResponse(response);
+    }
+
+    @Transactional
+    public void deleteProductById(UUID uuid) {
+        repository.deleteProductById(uuid);
     }
 
     private BigDecimal calculateRetailPrice(BigDecimal vendorPrice) {

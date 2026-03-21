@@ -90,7 +90,7 @@ public class ProductRepository {
                 product.getRetailPrice(),
                 product.getVendorPrice());
 
-        return findProductById(product.getUuid());
+        return product;
     }
 
     /**
@@ -113,7 +113,7 @@ public class ProductRepository {
             throw new ProductNotFoundException("Product not found: " + product.getUuid());
         }
 
-        return findProductById(product.getUuid());
+        return product;
 
     }
 
