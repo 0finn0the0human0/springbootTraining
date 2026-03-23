@@ -8,12 +8,12 @@
 
 package jdbctemplatepractice.product;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,8 +33,22 @@ public class ProductRestController {
         return ResponseEntity.ok(service.getAllProducts());
     }
 
-    @GetMapping("/{uuid}")
-    public ResponseEntity<ProductResponseDTO> getProduct(@PathVariable UUID uuid) {
-        return ResponseEntity.ok(service.getProductById(uuid));
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponseDTO> getProduct(@PathVariable UUID id) {
+        return ResponseEntity.ok(service.getProductById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<ProductResponseDTO> createNewProduct(@Valid @RequestBody ProductRequestDTO requestDTO) {
+
+        ProductResponseDTO createdProduct = service.postProduct(requestDTO);
+        // location of the newly created resource relative to this endpoint
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(createdProduct.uuid())
+                .toUri();
+
+        return ResponseEntity.created(location).body(createdProduct);
     }
 }
