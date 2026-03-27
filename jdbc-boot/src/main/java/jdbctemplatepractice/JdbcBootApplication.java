@@ -9,19 +9,13 @@
 
 package jdbctemplatepractice;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 
 @SpringBootApplication
 public class JdbcBootApplication {
 
-    private static final Logger logger = LoggerFactory.getLogger(JdbcBootApplication.class);
 
 
 
@@ -30,11 +24,6 @@ public class JdbcBootApplication {
     }
 
 
-    @Bean
-    public CommandLineRunner commandLineRunner(JdbcTemplate jdbcTemplate) {
-        String query = "SELECT count(*) FROM PRODUCTS";
-        return args -> logger.error("Hello there are " + jdbcTemplate.queryForObject(query, Long.class) + " accounts");
-    }
 
 }
 

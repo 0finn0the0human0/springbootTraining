@@ -25,8 +25,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Import(ProductRepository.class)
 public class ProductRepositoryTests {
 
-    private final UUID VALID_UUID = UUID.fromString("7193e96f-5c3a-4231-bbf0-0f2388d654ad");
-    private final UUID INVALID_UUID = UUID.fromString("3f44afd4-cb79-4fd3-b57d-c06a02c710c5");
+    private final UUID VALIDUUID = UUID.fromString("7193e96f-5c3a-4231-bbf0-0f2388d654ad");
+    private final UUID INVALIDUUID = UUID.fromString("3f44afd4-cb79-4fd3-b57d-c06a02c710c5");
 
     // -- Data field
     @Autowired
@@ -39,7 +39,7 @@ public class ProductRepositoryTests {
     @Test
     void shouldReturnProduct_whenValidUUID() {
         // Arrange the test data
-        Product request = productRepository.findProductById(VALID_UUID);
+        Product request = productRepository.findProductById(VALIDUUID);
 
         // Checks test data request results
         assertThat(request).isNotNull();
@@ -56,7 +56,7 @@ public class ProductRepositoryTests {
     void shouldThrowException_whenUUIDNotFound() {
 
         // Checks response results
-        assertThatThrownBy(() -> productRepository.findProductById(INVALID_UUID))
+        assertThatThrownBy(() -> productRepository.findProductById(INVALIDUUID))
                 .isInstanceOf(ProductNotFoundException.class);
     }
 

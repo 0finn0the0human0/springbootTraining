@@ -38,7 +38,10 @@ public class GlobalExceptionHandler {
      * */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ProblemDetail handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
-        String detail = "Parameter '" + ex.getName() + "' expects type " + ex.getRequiredType().getSimpleName();
+        // Resolving null pointer issue
+        String requiredType = (ex.getRequiredType() != null) ? ex.getRequiredType().getSimpleName() : "Unknown Type";
+
+        String detail = "Parameter '" + ex.getName() + "' expects type " + requiredType;
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, detail);
         pd.setTitle("Invalid Parameter Type");
         pd.setType(URI.create("errors/type-mismatch"));
