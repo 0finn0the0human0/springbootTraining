@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
 @Import(ProductRepository.class)
-public class ProductRepositoryTests {
+class ProductRepositoryTests {
 
     private final UUID VALIDUUID = UUID.fromString("7193e96f-5c3a-4231-bbf0-0f2388d654ad");
     private final UUID INVALIDUUID = UUID.fromString("3f44afd4-cb79-4fd3-b57d-c06a02c710c5");
