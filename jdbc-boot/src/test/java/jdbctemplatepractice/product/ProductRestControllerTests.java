@@ -77,4 +77,24 @@ class ProductRestControllerTests {
                 .andExpect(jsonPath("$.type").value("errors/product-not-found"))
                 .andExpect(jsonPath("$.instance").value("/api/products/"+testId1));
     }
+
+    /**
+     * Testing requests for getProduct through the controller when request is valid
+     * */
+    @Test
+    void shouldReturnProduct_whenRequestIsValid() throws Exception{
+        ProductResponseDTO p1 = new ProductResponseDTO(testId1, "Test Product 1",
+                "Description 1...", new BigDecimal("19.99"), new BigDecimal("24.98"));
+
+        when(productService.getProductById(testId1)).thenReturn(p1);
+
+        mockMvc.perform(get("/api/products/{testId1}", testId1))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.productName").value("Test Product 1"))
+                .andExpect(jsonPath("$.productDesc").value("Description 1..."))
+                .andExpect(jsonPath("$.vendorPrice").value(new BigDecimal("19.99")))
+                .andExpect(jsonPath("$.retailPrice").value(new BigDecimal("24.98")));
+
+    }
 }

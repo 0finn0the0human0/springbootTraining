@@ -14,6 +14,6 @@ public record ProductResponseDTO(
         UUID uuid,
         String productName,
         String productDesc,
-        BigDecimal retailPrice,
-        BigDecimal vendorPrice) {}
+        BigDecimal vendorPrice,
+        BigDecimal retailPrice) {}
 
