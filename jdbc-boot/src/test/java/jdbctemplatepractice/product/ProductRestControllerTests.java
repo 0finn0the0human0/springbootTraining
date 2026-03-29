@@ -6,9 +6,12 @@
  */
 package jdbctemplatepractice.product;
 
+import jdbctemplatepractice.common.GlobalExceptionHandler;
+import jdbctemplatepractice.product.exception.ProductNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,6 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProductRestController.class)
+@Import(GlobalExceptionHandler.class)
 class ProductRestControllerTests {
 
     private final UUID testId1 = UUID.randomUUID();
@@ -54,5 +58,23 @@ class ProductRestControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].productName").value("Test Product 1"));
+    }
+
+    /**
+     * Testing requests for getProduct through the controller where product id is not found. ControllerAdvice intercepts
+     * ProductNotFoundException thrown by the service mock and maps it to a 404 ProblemDetail response.
+     * */
+    @Test
+    void shouldReturn404_whenProductNotFound() throws Exception {
+
+        when(productService.getProductById(testId1)).thenThrow(new ProductNotFoundException("Product not found: " +
+                testId1));
+
+        mockMvc.perform(get("/api/products/{testId1}", testId1).accept(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(jsonPath("$.title").value("Product Not Found"))
+                .andExpect(jsonPath("$.type").value("errors/product-not-found"))
+                .andExpect(jsonPath("$.instance").value("/api/products/"+testId1));
     }
 }
