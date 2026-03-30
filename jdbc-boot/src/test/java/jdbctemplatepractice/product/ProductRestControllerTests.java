@@ -31,6 +31,15 @@ class ProductRestControllerTests {
     private final UUID testId1 = UUID.randomUUID();
     private final UUID testId2 = UUID.randomUUID();
 
+    private final ProductResponseDTO testProduct1 = new ProductResponseDTO(testId1, "Test Product 1",
+            "Description 1...", new BigDecimal("19.99"), new BigDecimal("24.98"));
+
+    private final ProductResponseDTO testProduct2 = new ProductResponseDTO(testId2, "Test Product 2",
+            "Description 2...", new BigDecimal("17.99"), new BigDecimal("22.48"));
+
+    private final ProductRequestDTO testRequest = new ProductRequestDTO("Test Product 2",
+            "Description 2...", new BigDecimal("17.99"));
+
     private final MockMvc mockMvc;
 
     @MockitoBean
@@ -46,13 +55,8 @@ class ProductRestControllerTests {
      * */
     @Test
     void shouldReturnAllProducts() throws Exception{
-        ProductResponseDTO p1 = new ProductResponseDTO(testId1, "Test Product 1",
-                "Description 1...", new BigDecimal("19.99"), new BigDecimal("24.98"));
-
-        ProductResponseDTO p2 = new ProductResponseDTO(testId2, "Test Product 2",
-                "Description 2...", new BigDecimal("17.99"), new BigDecimal("22.48"));
-
-        when(productService.getAllProducts()).thenReturn(Arrays.asList(p1, p2));
+        
+        when(productService.getAllProducts()).thenReturn(Arrays.asList(testProduct1, testProduct2));
 
         mockMvc.perform(get("/api/products"))
                 .andExpect(status().isOk())
@@ -70,7 +74,7 @@ class ProductRestControllerTests {
         when(productService.getProductById(testId1)).thenThrow(new ProductNotFoundException("Product not found: " +
                 testId1));
 
-        mockMvc.perform(get("/api/products/{testId1}", testId1).accept(MediaType.APPLICATION_PROBLEM_JSON))
+        mockMvc.perform(get("/api/products/{id}", testId1).accept(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(jsonPath("$.title").value("Product Not Found"))
@@ -79,14 +83,26 @@ class ProductRestControllerTests {
     }
 
     /**
+     * Testing requests for getProduct through the controller where input is not a valid type. .
+     * */
+    @Test
+    void shouldReturn400_whenTypeMismatch() throws Exception{
+        mockMvc.perform(get("/api/products/{id}", "bad-id")
+                        .accept(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(jsonPath("$.title").value("Invalid Parameter Type"))
+                .andExpect(jsonPath("$.type").value("errors/type-mismatch"))
+                .andExpect(jsonPath("$.instance").value("/api/products/bad-id"));
+    }
+
+    /**
      * Testing requests for getProduct through the controller when request is valid
      * */
     @Test
     void shouldReturnProduct_whenRequestIsValid() throws Exception{
-        ProductResponseDTO p1 = new ProductResponseDTO(testId1, "Test Product 1",
-                "Description 1...", new BigDecimal("19.99"), new BigDecimal("24.98"));
 
-        when(productService.getProductById(testId1)).thenReturn(p1);
+        when(productService.getProductById(testId1)).thenReturn(testProduct1);
 
         mockMvc.perform(get("/api/products/{testId1}", testId1))
                 .andExpect(status().isOk())
@@ -95,6 +111,33 @@ class ProductRestControllerTests {
                 .andExpect(jsonPath("$.productDesc").value("Description 1..."))
                 .andExpect(jsonPath("$.vendorPrice").value(new BigDecimal("19.99")))
                 .andExpect(jsonPath("$.retailPrice").value(new BigDecimal("24.98")));
+
+    }
+
+    /**
+     * Testing request for postProduct through the controller. Verifies location header.
+     * */
+    @Test
+    void shouldCreateProduct_whenRequestIsValid() throws Exception {
+
+        when(productService.postProduct(testRequest)).thenReturn(testProduct2);
+
+        mockMvc.perform(post("/api/products").contentType(MediaType.APPLICATION_JSON).content("""
+                {
+                "productName": "Test Product 2",
+                "productDesc":"Description 2...",
+                "vendorPrice":17.99
+                }
+                """))
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Location", "http://localhost/api/products/"+testId2))
+                .andExpect(jsonPath("$.uuid").value(testId2.toString()))
+                .andExpect(jsonPath("$.productName").value("Test Product 2"))
+                .andExpect(jsonPath("$.productDesc").value("Description 2..."))
+                .andExpect(jsonPath("$.vendorPrice").value(new BigDecimal("17.99")))
+                .andExpect(jsonPath("$.retailPrice").value(new BigDecimal("22.48")));
+
+
 
     }
 }
