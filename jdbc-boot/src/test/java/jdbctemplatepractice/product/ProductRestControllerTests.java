@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import tools.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -30,6 +31,9 @@ class ProductRestControllerTests {
 
     private final UUID testId1 = UUID.randomUUID();
     private final UUID testId2 = UUID.randomUUID();
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private final ProductResponseDTO testProduct1 = new ProductResponseDTO(testId1, "Test Product 1",
             "Description 1...", new BigDecimal("19.99"), new BigDecimal("24.98"));
@@ -122,13 +126,8 @@ class ProductRestControllerTests {
 
         when(productService.postProduct(testRequest)).thenReturn(testProduct2);
 
-        mockMvc.perform(post("/api/products").contentType(MediaType.APPLICATION_JSON).content("""
-                {
-                "productName": "Test Product 2",
-                "productDesc":"Description 2...",
-                "vendorPrice":17.99
-                }
-                """))
+        mockMvc.perform(post("/api/products").contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(testRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "http://localhost/api/products/"+testId2))
                 .andExpect(jsonPath("$.uuid").value(testId2.toString()))
