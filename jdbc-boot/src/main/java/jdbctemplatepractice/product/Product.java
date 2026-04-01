@@ -21,6 +21,7 @@ public class Product {
     private BigDecimal vendorPrice;
 
     public Product() {
+        // For reflection
     }
 
 

@@ -21,6 +21,8 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.UUID;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -33,7 +35,7 @@ class ProductRestControllerTests {
     private final UUID testId2 = UUID.randomUUID();
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper; // for mapping the json
 
     private final ProductResponseDTO testProduct1 = new ProductResponseDTO(testId1, "Test Product 1",
             "Description 1...", new BigDecimal("19.99"), new BigDecimal("24.98"));
@@ -65,7 +67,8 @@ class ProductRestControllerTests {
         mockMvc.perform(get("/api/products"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].productName").value("Test Product 1"));
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].productName").value(testProduct1.productName()));
     }
 
     /**
@@ -108,13 +111,13 @@ class ProductRestControllerTests {
 
         when(productService.getProductById(testId1)).thenReturn(testProduct1);
 
-        mockMvc.perform(get("/api/products/{testId1}", testId1))
+        mockMvc.perform(get("/api/products/{id}", testId1))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.productName").value("Test Product 1"))
-                .andExpect(jsonPath("$.productDesc").value("Description 1..."))
-                .andExpect(jsonPath("$.vendorPrice").value(new BigDecimal("19.99")))
-                .andExpect(jsonPath("$.retailPrice").value(new BigDecimal("24.98")));
+                .andExpect(jsonPath("$.productName").value(testProduct1.productName()))
+                .andExpect(jsonPath("$.productDesc").value(testProduct1.productDesc()))
+                .andExpect(jsonPath("$.vendorPrice").value(testProduct1.vendorPrice()))
+                .andExpect(jsonPath("$.retailPrice").value(testProduct1.retailPrice()));
 
     }
 
@@ -131,12 +134,52 @@ class ProductRestControllerTests {
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "http://localhost/api/products/"+testId2))
                 .andExpect(jsonPath("$.uuid").value(testId2.toString()))
-                .andExpect(jsonPath("$.productName").value("Test Product 2"))
-                .andExpect(jsonPath("$.productDesc").value("Description 2..."))
-                .andExpect(jsonPath("$.vendorPrice").value(new BigDecimal("17.99")))
-                .andExpect(jsonPath("$.retailPrice").value(new BigDecimal("22.48")));
+                .andExpect(jsonPath("$.productName").value(testProduct2.productName()))
+                .andExpect(jsonPath("$.productDesc").value(testProduct2.productDesc()))
+                .andExpect(jsonPath("$.vendorPrice").value(testProduct2.vendorPrice()))
+                .andExpect(jsonPath("$.retailPrice").value(testProduct2.retailPrice()));
 
 
 
     }
+
+    /**
+     * Tests putProduct to ensure product update and 200 Ok status
+     * */
+    @Test
+    void shouldUpdateProduct_whenRequestIsValid() throws Exception{
+
+        ProductResponseDTO updatedProduct = new ProductResponseDTO(testId2, "Test Product 1",
+                "Description 1...", new BigDecimal("19.99"), new BigDecimal("24.98"));
+
+        when(productService.putProduct(testId2, testRequest)).thenReturn(updatedProduct);
+
+        mockMvc.perform(put("/api/products/{id}", testId2)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("uuid").value(testId2.toString()))
+                .andExpect(jsonPath("productName").value(updatedProduct.productName()))
+                .andExpect(jsonPath("productDesc").value(updatedProduct.productDesc()))
+                .andExpect(jsonPath("vendorPrice").value(updatedProduct.vendorPrice()))
+                .andExpect(jsonPath("retailPrice").value(updatedProduct.retailPrice()));
+    }
+
+    /**
+     * Tests deleteProductById to ensure product deletes and no content status
+     * */
+    @Test
+    void shouldDeleteProduct_whenProductIsFound() throws Exception{
+
+        mockMvc.perform(delete("/api/products/{id}", testId1)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        // Verify the service was called with the correct id
+        verify(productService).deleteProductById(testId1);
+
+
+    }
+
+
 }
