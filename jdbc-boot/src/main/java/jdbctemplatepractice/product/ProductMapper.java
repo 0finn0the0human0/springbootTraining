@@ -24,8 +24,8 @@ public class ProductMapper {
         return new ProductResponseDTO(product.getUuid(),
                 product.getProductName(),
                 product.getProductDesc(),
-                product.getRetailPrice(),
-                product.getVendorPrice());
+                product.getVendorPrice(),
+                product.getRetailPrice());
 
     }
 }
