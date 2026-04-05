@@ -1,3 +1,10 @@
+/**
+ * Project: JDBCTemplate Practice
+ * Description: Cross-cutting logging aspect for service and repository layers.
+ * Author: Benjamin Soto-Roberts
+ * Created: 04/03/2026
+ */
+
 package jdbctemplatepractice.common;
 
 import org.aspectj.lang.ProceedingJoinPoint;
