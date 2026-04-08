@@ -22,67 +22,80 @@ import java.util.Arrays;
 @Component
 public class LoggingAspect {
 
+    private static final String logStartBody = "[{} START] {} args={}";
+    private static final String logEndBody = "[{} END] {} duration={} result={}";
+    private static final String logErrorBody = "[{} ERROR] {} duration={} ex={}";
+
 
     private final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
     /**
-     * Pointcut targeting all methods in any class ending with Repository under jdbctemplatepractice.product package
+     * Pointcut targeting all methods within the product package that also have a Repository Stereotype
      */
-    @Pointcut("execution(* jdbctemplatepractice.product..*Repository.*(..))")
+    @Pointcut("within(jdbctemplatepractice.product..*) && @within(org.springframework.stereotype.Repository)")
     void repositoryMethods() {}
 
     /**
-     * Pointcut targeting all methods in any class ending with Service under jdbctemplatepractice.product package
-     * */
-    @Pointcut("execution(* jdbctemplatepractice.product..*Service.*(..))")
+     * Pointcut targeting all methods within the product package that also have a Service Stereotype
+     */
+    @Pointcut("within(jdbctemplatepractice.product..*) && @within(org.springframework.stereotype.Service)")
     void serviceMethods() {}
 
+
     /**
-     * Logs service-layer method calls, execution time, results, and errors
+     * Around advice for all methods matched by repositoryMethods() pointcut. When a Repository layer method matches the
+     * pointcut, Spring AOP intercepts that method call and routes execution through this advice first. This method then
+     * delegates to the shared logAround helper to handle entry logging, execution timing, exit logging and exception
+     * logging.
+     * */
+    @Around("repositoryMethods()")
+    public Object logRepo(ProceedingJoinPoint pjp) throws Throwable {
+        return logAround(pjp, "REPO", false);
+    }
+
+
+    /**
+     * Around advice for all methods matched by serviceMethods() pointcut. When a service layer method matches the
+     * pointcut, Spring AOP intercepts that method call and routes execution through this advice first. This method then
+     * delegates to the shared logAround helper to handle entry logging, execution timing, exit logging and exception
+     * logging.
      * */
     @Around("serviceMethods()")
-    public Object logService(ProceedingJoinPoint pjp) throws Throwable{
-        String method = getClassName(pjp.getTarget()) + "." + pjp.getSignature().getName(); // Identifies method
-        long start = System.currentTimeMillis(); // Start timer initiated
-
-        logger.info("[SERVICE_START] {} args={}", method, summarizeArgs(pjp.getArgs()));
-
-        try {
-            Object result = pjp.proceed();
-            long duration = System.currentTimeMillis() - start;
-            logger.info("[SERVICE_END] {} durationMs={} result={}", method, duration, summarize(result));
-            return result;
-
-        } catch (Throwable ex) {
-            long duration = System.currentTimeMillis() - start;
-            logger.warn("[SERVICE_ERROR] {} durationMs={} ex={}", method, duration, ex.toString());
-            throw ex;
-        }
-
+    public Object logService(ProceedingJoinPoint pjp) throws Throwable {
+        return logAround(pjp, "SERVICE", true);
     }
 
     /**
-     * Logs repository-layer method calls with debug-level detail
+     * Logs around method handles delegation to helper methods for logging events related to pointcuts. Captures duration
+     * between logging events, methods called, the layer that the pointcut flagged and arguments.
+     * java:S2139 - Logging and rethrowing is intentional in this cross-cutting aspect.
+     * java:S2629 - Sonar false positive: SLF4J handles lazy evaluation
      * */
-    @Around("repositoryMethods()")
-    public Object logRep(ProceedingJoinPoint pjp) throws Throwable{
+    @SuppressWarnings({"java:S2139", "java:S2629"})
+    private Object logAround(ProceedingJoinPoint pjp, String layer, boolean infoLevel) throws Throwable {
         String method = getClassName(pjp.getTarget()) + "." + pjp.getSignature().getName(); // Identifies method
         long start = System.currentTimeMillis(); // Start timer initiated
 
-        logger.debug("[REPO_START] {} args={}", method, summarizeArgs(pjp.getArgs()));
+        log(infoLevel, logStartBody, layer, method, summarizeArgs(pjp.getArgs()));
 
         try {
             Object result = pjp.proceed();
             long duration = System.currentTimeMillis() - start;
-            logger.debug("[REPO_END] {} durationMs={} result={}", method, duration, summarize(result));
+            log(infoLevel, logEndBody, layer, method, duration, summarize(result));
             return result;
-
         } catch (Throwable ex) {
             long duration = System.currentTimeMillis() - start;
-            logger.warn("[REPO_ERROR] {} durationMs={} ex={}", method, duration, ex.toString());
+            log(infoLevel, logErrorBody, layer, method, duration, ex.toString());
             throw ex;
         }
+    }
 
+    /**
+     * Helper method responsible for logging action.
+     * */
+    private void log(boolean infoLevel, String message, Object... args) {
+        if (infoLevel) logger.info(message, args);
+        else logger.debug(message, args);
     }
 
 

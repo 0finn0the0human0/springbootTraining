@@ -6,8 +6,9 @@
  */
 
 
-package jdbctemplatepractice.product;
+package jdbctemplatepractice.product.service;
 
+import jdbctemplatepractice.product.*;
 import jdbctemplatepractice.product.exception.ProductNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

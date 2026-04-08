@@ -4,9 +4,13 @@
  * Author: Benjamin Soto-Roberts
  * Created: 03/28/2026
  */
-package jdbctemplatepractice.product;
+package jdbctemplatepractice.product.slice;
 
 import jdbctemplatepractice.common.GlobalExceptionHandler;
+import jdbctemplatepractice.product.ProductRequestDTO;
+import jdbctemplatepractice.product.ProductResponseDTO;
+import jdbctemplatepractice.product.ProductRestController;
+import jdbctemplatepractice.product.ProductService;
 import jdbctemplatepractice.product.exception.ProductNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

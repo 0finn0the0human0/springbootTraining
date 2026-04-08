@@ -6,8 +6,10 @@
  */
 
 
-package jdbctemplatepractice.product;
+package jdbctemplatepractice.product.slice;
 
+import jdbctemplatepractice.product.Product;
+import jdbctemplatepractice.product.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.test.autoconfigure.JdbcTest;
