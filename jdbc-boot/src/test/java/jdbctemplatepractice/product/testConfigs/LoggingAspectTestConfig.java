@@ -6,7 +6,7 @@
  * Created: 04/08/2026
  */
 
-package jdbctemplatepractice.product.testUtils;
+package jdbctemplatepractice.product.testConfigs;
 
 import jdbctemplatepractice.common.LoggingAspect;
 import org.springframework.boot.test.context.TestConfiguration;

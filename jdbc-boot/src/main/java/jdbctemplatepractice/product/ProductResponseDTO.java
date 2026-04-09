@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public record ProductResponseDTO(
-        UUID uuid,
+        UUID productId,
         String productName,
         String productDesc,
         BigDecimal vendorPrice,

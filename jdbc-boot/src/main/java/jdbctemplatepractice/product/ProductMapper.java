@@ -21,7 +21,7 @@ public class ProductMapper {
     }
 
     public ProductResponseDTO toResponse(Product product) {
-        return new ProductResponseDTO(product.getUuid(),
+        return new ProductResponseDTO(product.getProductId(),
                 product.getProductName(),
                 product.getProductDesc(),
                 product.getVendorPrice(),

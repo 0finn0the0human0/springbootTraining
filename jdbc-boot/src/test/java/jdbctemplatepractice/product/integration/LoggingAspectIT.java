@@ -8,7 +8,7 @@
 
 package jdbctemplatepractice.product.integration;
 
-import jdbctemplatepractice.product.testUtils.LoggingAspectTestConfig;
+import jdbctemplatepractice.product.testConfigs.LoggingAspectTestConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

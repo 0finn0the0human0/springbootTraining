@@ -85,7 +85,7 @@ class ProductRepositoryTests {
     void shouldSaveProduct_whenRequestIsValid() {
         // Arrange the test data
         Product request = new Product();
-        request.setUuid(UUID.randomUUID());
+        request.setProductId(UUID.randomUUID());
         request.setProductName("Test Product");
         request.setProductDesc("Test Description...");
         request.setRetailPrice(new BigDecimal("19.99"));
@@ -107,7 +107,7 @@ class ProductRepositoryTests {
     void shouldUpdateProduct_whenRequestIsValid() {
         // Arrange the test data
         Product request = new Product();
-        request.setUuid(UUID.fromString("4f8b6f8e-92ba-4c2d-ba98-cb0c442176f7"));
+        request.setProductId(UUID.fromString("4f8b6f8e-92ba-4c2d-ba98-cb0c442176f7"));
         request.setProductName("Steven Universe DVD");
         request.setProductDesc("The 2nd best dvd in the world");
         request.setRetailPrice(new BigDecimal("15.99"));

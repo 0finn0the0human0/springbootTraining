@@ -73,7 +73,7 @@ class ProductServiceTests {
         ArgumentCaptor<Product> captor = ArgumentCaptor.forClass(Product.class);
         verify(repository).saveProduct(captor.capture());
 
-        assertThat(captor.getValue().getUuid()).isNotNull();
+        assertThat(captor.getValue().getProductId()).isNotNull();
     }
 
     @Test
@@ -121,7 +121,7 @@ class ProductServiceTests {
         ArgumentCaptor<Product> captor = ArgumentCaptor.forClass(Product.class);
         verify(repository).updateProduct(captor.capture());
 
-        assertThat(captor.getValue().getUuid()).isEqualTo(uuid);
+        assertThat(captor.getValue().getProductId()).isEqualTo(uuid);
     }
 
     @Test

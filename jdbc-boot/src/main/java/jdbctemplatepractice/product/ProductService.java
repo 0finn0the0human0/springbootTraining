@@ -40,7 +40,7 @@ public class ProductService {
     @Transactional
     public ProductResponseDTO postProduct(ProductRequestDTO requestDTO) {
         Product p = mapper.toProduct(requestDTO);
-        p.setUuid(UUID.randomUUID());
+        p.setProductId(UUID.randomUUID());
         p.setRetailPrice(calculateRetailPrice(p.getVendorPrice()));
 
         Product response = repository.saveProduct(p);
@@ -50,7 +50,7 @@ public class ProductService {
     @Transactional
     public ProductResponseDTO putProduct(UUID uuid, ProductRequestDTO requestDTO) {
         Product p = mapper.toProduct(requestDTO);
-        p.setUuid(uuid);
+        p.setProductId(uuid);
         p.setRetailPrice(calculateRetailPrice(p.getVendorPrice()));
 
 

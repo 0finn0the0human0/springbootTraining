@@ -57,7 +57,7 @@ public class ProductRestController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest() // gets the base from the request
                 .path("/{id}") // add to the path
-                .buildAndExpand(createdProduct.uuid()) // replaces placeholder id
+                .buildAndExpand(createdProduct.productId()) // replaces placeholder id
                 .toUri();
 
         return ResponseEntity.created(location).body(createdProduct);

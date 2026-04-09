@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class Product {
 
-    private UUID uuid;
+    private UUID productId;
     private String productName;
     private String productDesc;
     private BigDecimal retailPrice;
@@ -25,12 +25,12 @@ public class Product {
     }
 
 
-    public UUID getUuid() {
-        return uuid;
+    public UUID getProductId() {
+        return productId;
     }
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
+    public void setProductId(UUID productId) {
+        this.productId = productId;
     }
 
     public String getProductName() {
@@ -68,7 +68,7 @@ public class Product {
     @Override
     public String toString() {
         return "Product{" +
-                "uuid='" + uuid + '\'' +
+                "productId='" + productId + '\'' +
                 ", productName='" + productName + '\'' +
                 ", productDesc='" + productDesc + '\'' +
                 ", retailPrice=" + retailPrice +
